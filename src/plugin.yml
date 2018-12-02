@@ -1,0 +1,48 @@
+# §
+name: HypeFlexPunishments
+version: 1.0
+main: com.osx11.hypeflex.punishments.Main
+commands:
+  HFPunishments:
+    description: 'Reloads plugin'
+    usage: '§cUsage: /hfp'
+    aliases: [HFPunishments, hfp]
+  kick:
+    description: 'Kicks a player'
+    usage: '§cUsage: /kick <player> [reason]'
+  ban:
+    description: 'Bans a player'
+    usage: '§cUsage: /ban [-f] <player> [reason]'
+  banip:
+    description: 'Bans a player IP address'
+    usage: '§cUsage: /banip [-f] <player> [reason] OR /banip <IP> [reason]'
+  tempban:
+    description: 'Bans a player for a specified time'
+    usage: '§cUsage: /tempban [-f] <player> <time> [reason]'
+  unban:
+    description: 'Unbans a player'
+    usage: '§cUsage: /unban <player>'
+  unbanip:
+    description: 'Unbans a player IP address'
+    usage: '§cUsage: /unbanip <ip (or player)>'
+  banlist:
+    description: 'Shows a banned players'
+    usage: '§cUsage: /banlist'
+  banlistip:
+    description: 'Shows a banned players IP'
+    usage: '§cUsage: /banlistip'
+  mute:
+    description: 'Blocks players chat'
+    usage: '§cUsage: /mute [-f] <player> [reason]'
+  muteip:
+    description: 'Blocks players ip chat'
+    usage: '§cUsage: /muteip [-f] <player> [reason]'
+  tempmute:
+    description: 'Blocks players chat for a specified time'
+    usage: '§cUsage: /tempmute [-f] <player> <time> [reason]'
+  unmute:
+    description: 'Unmutes a player'
+    usage: '§cUsage: /unmute <player>'
+  unmuteip:
+    description: 'Unmutes a players ip'
+    usage: '§cUsage: /unmute <ip (or player)>'

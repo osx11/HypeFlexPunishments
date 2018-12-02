@@ -1,0 +1,13 @@
+MySQL:
+  login: login
+  password: password
+  url: jdbc:mysql://host:port/database
+
+cooldowns:
+  kick: 30
+  ban: 60
+  banip: 60
+  tempban: 120
+  mute: 180
+  muteip: 190
+  tempmute: 200
