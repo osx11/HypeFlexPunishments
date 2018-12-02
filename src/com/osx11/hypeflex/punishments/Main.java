@@ -17,7 +17,7 @@ import java.io.File;
 import java.util.Objects;
 
 public class Main extends JavaPlugin implements Listener {
-// test
+
     public void onEnable() {
 
         File configFile = new File(getDataFolder() + File.separator + "config.yml");
