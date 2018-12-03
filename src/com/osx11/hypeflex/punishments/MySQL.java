@@ -100,6 +100,33 @@ public class MySQL {
         return result;
     }
 
+    public static int getInt(String query, String columnLabel) {
+        int conut = 0;
+        try {
+            try {
+                connection = getConnection();
+            } catch (Exception e) {
+                Logging.WARNING(MessagesData.getMSG_MySQL_ConnectionError());
+                e.printStackTrace();
+            }
+
+            Statement statement = connection.createStatement();
+
+            ResultSet resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                conut = resultSet.getInt(columnLabel);
+            }
+
+            statement.close();
+            connection.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return conut;
+    }
+
     public static boolean getBoolean(String query, String columnLabel) {
         boolean result = false;
         try {
@@ -210,9 +237,9 @@ public class MySQL {
 
             }
 
-            ResultSet nicksRS = statement.executeQuery("SELECT IP FROM bansIP");
-            while (nicksRS.next()) {
-                IPs.add(nicksRS.getString("IP"));
+            ResultSet IPsRS = statement.executeQuery("SELECT IP FROM bansIP");
+            while (IPsRS.next()) {
+                IPs.add(IPsRS.getString("IP"));
 
             }
 
@@ -232,6 +259,60 @@ public class MySQL {
 
         for (int i = 0; i < IPs.toArray().length; i++) {
             result[i] = "§7[" + issuedDate.get(i) + " " + issuedTime.get(i) + "] §f" + IPs.get(i) + " §7: §f" + reasons.get(i);
+        }
+
+        return result;
+    }
+
+    public static String[] getWarnlist(String nick) {
+        ArrayList<String> issuedDate = new ArrayList<>();
+        ArrayList<String> issuedTime = new ArrayList<>();
+        ArrayList<String> warnsID = new ArrayList<>();
+        ArrayList<String> reasons = new ArrayList<>();
+        try {
+            try {
+                connection = getConnection();
+            } catch (Exception e) {
+                Logging.WARNING(MessagesData.getMSG_MySQL_ConnectionError());
+                e.printStackTrace();
+            }
+
+            Statement statement = connection.createStatement();
+
+            ResultSet issuedDateRS = statement.executeQuery("SELECT issuedDate FROM warns WHERE nick=\"" + nick + "\"");
+            while (issuedDateRS.next()) {
+                issuedDate.add(issuedDateRS.getString("issuedDate"));
+
+            }
+
+            ResultSet issuedTimeRS = statement.executeQuery("SELECT issuedTime FROM warns WHERE nick=\"" + nick + "\"");
+            while (issuedTimeRS.next()) {
+                issuedTime.add(issuedTimeRS.getString("issuedTime"));
+
+            }
+
+            ResultSet warnsIDRS = statement.executeQuery("SELECT warnID FROM warns WHERE nick=\"" + nick + "\"");
+            while (warnsIDRS.next()) {
+                warnsID.add(warnsIDRS.getString("warnID"));
+
+            }
+
+            ResultSet reasonsRS = statement.executeQuery("SELECT reason FROM warns WHERE nick=\"" + nick + "\"");
+            while (reasonsRS.next()) {
+                reasons.add(reasonsRS.getString("reason"));
+            }
+
+            statement.close();
+            connection.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String[] result = new String[warnsID.toArray().length];
+
+        for (int i = 0; i < warnsID.toArray().length; i++) {
+            result[i] = "§7[" + issuedDate.get(i) + " " + issuedTime.get(i) + "] §fID " + warnsID.get(i) + " §7: §f" + reasons.get(i);
         }
 
         return result;

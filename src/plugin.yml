@@ -8,28 +8,28 @@ commands:
     usage: '§cUsage: /hfp'
     aliases: [HFPunishments, hfp]
   kick:
-    description: 'Kicks a player'
+    description: 'Kicks player'
     usage: '§cUsage: /kick <player> [reason]'
   ban:
-    description: 'Bans a player'
+    description: 'Bans player'
     usage: '§cUsage: /ban [-f] <player> [reason]'
   banip:
-    description: 'Bans a player IP address'
+    description: 'Bans player IP address'
     usage: '§cUsage: /banip [-f] <player> [reason] OR /banip <IP> [reason]'
   tempban:
-    description: 'Bans a player for a specified time'
+    description: 'Bans player for specified time'
     usage: '§cUsage: /tempban [-f] <player> <time> [reason]'
   unban:
-    description: 'Unbans a player'
+    description: 'Unbans player'
     usage: '§cUsage: /unban <player>'
   unbanip:
-    description: 'Unbans a player IP address'
+    description: 'Unbans player IP address'
     usage: '§cUsage: /unbanip <ip (or player)>'
   banlist:
-    description: 'Shows a banned players'
+    description: 'Shows banned players'
     usage: '§cUsage: /banlist'
   banlistip:
-    description: 'Shows a banned players IP'
+    description: 'Shows banned players IP'
     usage: '§cUsage: /banlistip'
   mute:
     description: 'Blocks players chat'
@@ -38,11 +38,20 @@ commands:
     description: 'Blocks players ip chat'
     usage: '§cUsage: /muteip [-f] <player> [reason]'
   tempmute:
-    description: 'Blocks players chat for a specified time'
+    description: 'Blocks players chat for specified time'
     usage: '§cUsage: /tempmute [-f] <player> <time> [reason]'
   unmute:
-    description: 'Unmutes a player'
+    description: 'Unmutes player'
     usage: '§cUsage: /unmute <player>'
   unmuteip:
-    description: 'Unmutes a players ip'
+    description: 'Unmutes players ip'
     usage: '§cUsage: /unmute <ip (or player)>'
+  warn:
+    description: 'Warn player'
+    usage: '§cUsage: /warn <player> <reason>'
+  warnlist:
+    description: 'Shows all warns of player'
+    usage: '§cUsage: /warnlist <player>'
+  unwarn:
+    description: 'Deletes players warn (delete all players warns if -a flag is specified)'
+    usage: '§cUsage: /unwarn [-a] <player> <warn_id>'

@@ -51,12 +51,20 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("tempmute").setExecutor(new CommandTempmute(this));
         getCommand("unmute").setExecutor(new CommandUnmute(this));
         getCommand("unmuteip").setExecutor(new CommandUnmuteIP(this));
+        getCommand("warn").setExecutor(new CommandWarn(this));
+        getCommand("warnlist").setExecutor(new CommandWarnlist(this));
+        getCommand("unwarn").setExecutor(new CommandUnwarn(this));
 
         this.getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("---------- HF Punishments LOADED SUCCESSFULLY ----------");
     }
 
     public void onDisable() { getLogger().info("---------- HF Punishments SHUTTING DOWN ----------"); }
+
+// ---------------------------------------------------------------------------------------------------------------------
+    private ConfigData configData = new ConfigData(this);
+    private MessagesData messagesData = new MessagesData(this);
+// ---------------------------------------------------------------------------------------------------------------------
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -163,10 +171,5 @@ public class Main extends JavaPlugin implements Listener {
         }
     // -----------------------------------------------------------------------------------------------------------------
     }
-
-// ---------------------------------------------------------------------------------------------------------------------
-    private ConfigData configData = new ConfigData(this);
-    private MessagesData messagesData = new MessagesData(this);
-// ---------------------------------------------------------------------------------------------------------------------
 
 }

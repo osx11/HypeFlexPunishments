@@ -29,7 +29,7 @@ public class CommandKick implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (!User.hasPermission(sender.getName(), "hfp.kick")) {
+        if (!User.hasPermission(sender, "hfp.kick")) {
             sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
             return true;
         }

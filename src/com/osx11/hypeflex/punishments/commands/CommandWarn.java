@@ -7,7 +7,6 @@ import com.osx11.hypeflex.punishments.User;
 import com.osx11.hypeflex.punishments.data.ConfigData;
 import com.osx11.hypeflex.punishments.data.MessagesData;
 import com.osx11.hypeflex.punishments.exceptions.InvalidPunishReason;
-import com.osx11.hypeflex.punishments.exceptions.PlayerNotFoundInDB;
 import com.osx11.hypeflex.punishments.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -17,14 +16,12 @@ import org.bukkit.entity.Player;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class CommandMuteIP implements CommandExecutor {
+public class CommandWarn implements CommandExecutor {
 
     private Main plugin;
 
-    public CommandMuteIP(Main plugin) {
+    public CommandWarn(Main plugin) {
         this.plugin = plugin;
     }
 
@@ -32,7 +29,7 @@ public class CommandMuteIP implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (!User.hasPermission(sender, "hfp.muteip")) {
+        if (!User.hasPermission(sender, "hfp.warn")) {
             sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
             return true;
         }
@@ -41,7 +38,7 @@ public class CommandMuteIP implements CommandExecutor {
 
         boolean forceSpecified = false;
         if (args[0].equalsIgnoreCase("-f")) {
-            if (User.hasPermission(sender, "hfp.mute.force")) {
+            if (User.hasPermission(sender, "hfp.warn.force")) {
                 forceSpecified = true;
             } else {
                 sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
@@ -58,59 +55,38 @@ public class CommandMuteIP implements CommandExecutor {
             punishableNick = args[0];
         }
 
-        boolean found = false;
-        String punishableIP = "";
-
-        Pattern IPPattern = Pattern.compile("((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))");
-        Matcher matcher = IPPattern.matcher(punishableNick);
-        while (matcher.find()) {
-            if (matcher.group(1) != null) {
-                punishableIP = matcher.group(1);
-                found = true;
-            }
-        }
-
-        if (!found) {
-            try {
-                punishableIP = User.getIP(punishableNick);
-            } catch (PlayerNotFoundInDB e) {
-                sender.sendMessage(e.getMessage());
-                return true;
-            }
-        }
-
         GregorianCalendar gregorianCalendar = new GregorianCalendar();
 
         String reason = MessagesData.getReason_DefaultReason();
         Player player = Bukkit.getPlayer(punishableNick);
         String UUID = MySQL.getString("SELECT UUID FROM players WHERE nick=\"" + punishableNick + "\"", "UUID");
-        int cooldownConfig = ConfigData.getCoolDownMuteIP();
+        int cooldownConfig = ConfigData.getCoolDownWarn();
         String date = String.valueOf(gregorianCalendar.get(Calendar.YEAR)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.MONTH)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.DATE));
         String time = String.valueOf(gregorianCalendar.get(Calendar.HOUR)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.MINUTE)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.SECOND));
 
         // если игрок не найден
         if (!User.isOnline(player)) {
-            if (!User.hasPermission(sender, "hfp.mute.offline")) {
+            if (!User.hasPermission(sender, "hfp.warn.offline")) {
                 sender.sendMessage(MessagesData.getMSG_PlayerIsOffline());
                 return true;
             }
             if (!forceSpecified) {
                 if (UUID == null) { // если игрока нет вообще (по uuid в таблице)
-                    sender.sendMessage(MessagesData.getMSG_IPNotFound(punishableIP));
+                    sender.sendMessage(MessagesData.getMSG_PlayerNotFound(punishableNick));
                     return true;
                 }
             }
         }
 
         // если у человека иммунитет
-        if (User.hasPermission(punishableNick, "hfp.mute.exempt") && sender instanceof Player) {
+        if (User.hasPermission(punishableNick, "hfp.warn.exempt") && sender instanceof Player) {
             sender.sendMessage(MessagesData.getMSG_Exempt(punishableNick));
             return true;
         }
 
         // проверяем активно ли кд
         if (sender instanceof Player) {
-            if (coolDown.hasCoolDown(Bukkit.getPlayer(sender.getName()), punishableNick, "muteip", cooldownConfig))
+            if (coolDown.hasCoolDown(Bukkit.getPlayer(sender.getName()), punishableNick, "warn", cooldownConfig))
                 return true;
         }
 
@@ -132,26 +108,53 @@ public class CommandMuteIP implements CommandExecutor {
 
         // отправляем мсг, если онлайн
         if (User.isOnline(player)) {
-            player.sendMessage(MessagesData.getReason_MuteIPReasonFormat(reason));
+            player.sendMessage(MessagesData.getReason_WarnReasonFormat(reason));
         }
+
+        int warnsCount = MySQL.getInt("SELECT COUNT(nick) FROM warns WHERE nick=\"" + punishableNick + "\"", "COUNT(nick)") + 1;
+        int warnID = MySQL.getInt("SELECT max(warnID) as warnID from warns WHERE nick=\"" + punishableNick + "\"", "warnID") + 1;
 
         // добавляем в бд
-        if (User.isMutedIP(punishableIP)) {
-            if (User.hasPermission(sender, "hfp.mute.override")) {
-                MySQL.insert("UPDATE mutesIP SET reason=\"" + reason + "\", issuedDate=\"" + date + "\", issuedTime=\"" + time + "\", issuedBy=\"" + sender.getName() + "\" WHERE IP=\"" + punishableIP + "\"");
-            } else {
-                sender.sendMessage(MessagesData.getMSG_CannotOverride());
-                return true;
-            }
-        } else {
-            MySQL.insert("INSERT INTO mutesIP SET IP=\"" + punishableIP + "\", reason=\"" + reason + "\", issuedDate=\"" + date + "\", issuedTime=\"" + time + "\", issuedBy=\"" + sender.getName() + "\"");
-        }
+        MySQL.insert("INSERT INTO warns SET nick=\"" + punishableNick + "\", reason=\"" + reason + "\", warnID=\"" + String.valueOf(warnID) +"\", issuedDate=\"" + date + "\", issuedTime=\"" + time + "\", issuedBy=\"" + sender.getName() + "\"");
+
 
         // логируем
-        Logging.INFO(MessagesData.getLogging_MuteIPLog(sender.getName(), punishableIP, reason));
+        Logging.INFO(MessagesData.getLogging_WarnLog(sender.getName(), punishableNick, reason));
 
         // бродкастим
-        Bukkit.broadcastMessage(MessagesData.getLogging_MuteIPLog(sender.getName(), punishableIP, reason));
+        Bukkit.broadcastMessage(MessagesData.getLogging_WarnLog(sender.getName(), punishableNick, reason));
+
+        //--------------------------------------------------------------------------------------------------------------
+        // выполнение автоматических команд
+        String warnsCountCommand[] = ConfigData.getWarnsCountCommands();
+        boolean isLastWarn = false;
+
+        if (ConfigData.getWarns_AutoExecute()) {
+            for (int i = 0; i < warnsCountCommand.length; i++) {
+                if (warnsCount == Integer.parseInt(warnsCountCommand[i])) {
+                    if (warnsCount == Integer.parseInt(warnsCountCommand[warnsCountCommand.length - 1])) {
+                        isLastWarn = true;
+                    }
+
+                    boolean ifOnlineOnly = plugin.getConfig().getBoolean("warns.on_warn_count." + warnsCountCommand[i] + ".if_player_is_online"); // если в конфиге стоит исполнение команды только если игрок онлайн
+                    String executeCommand = plugin.getConfig().getString("warns.on_warn_count." + warnsCountCommand[i] + ".command").replaceAll("%player%", punishableNick).replaceAll("%warnsCount%", warnsCountCommand[i]);
+
+                    if (!User.isOnline(player)) {
+                        if (!ifOnlineOnly) {
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), executeCommand);
+                        }
+                    } else {
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), executeCommand);
+                    }
+                }
+            }
+            if (ConfigData.getWarns_DeleteAfterLast()) {
+                if (isLastWarn) {
+                    MySQL.insert("DELETE FROM warns WHERE nick=\"" + punishableNick + "\"");
+                }
+            }
+        }
+        //--------------------------------------------------------------------------------------------------------------
 
         return true;
     }

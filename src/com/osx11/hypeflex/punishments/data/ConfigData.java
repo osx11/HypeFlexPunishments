@@ -24,6 +24,12 @@ public final class ConfigData {
     private static int coolDownMute;
     private static int coolDownMuteIP;
     private static int coolDownTempmute;
+    private static int coolDownWarn;
+
+    private static String[] warnsCountCommands;
+
+    private static boolean Warns_AutoExecute;
+    private static boolean Warns_DeleteAfterLast;
 
     public void setConfigData() {
         try {
@@ -38,6 +44,12 @@ public final class ConfigData {
             coolDownMute = plugin.getConfig().getInt("cooldowns.mute");
             coolDownMuteIP = plugin.getConfig().getInt("cooldowns.muteip");
             coolDownTempmute = plugin.getConfig().getInt("cooldowns.tempmute");
+            coolDownWarn = plugin.getConfig().getInt("cooldowns.warn");
+
+            warnsCountCommands = plugin.getConfig().getConfigurationSection("warns.on_warn_count").getKeys(false).toArray(new String[plugin.getConfig().getConfigurationSection("warns.on_warn_count").getKeys(false).size()]);
+
+            Warns_AutoExecute = plugin.getConfig().getBoolean("warns.command_auto_execute");
+            Warns_DeleteAfterLast = plugin.getConfig().getBoolean("warns.delete_all_warnings_after_last_warn");
         } catch (java.lang.NullPointerException e) { e.printStackTrace(); }
     }
 
@@ -78,6 +90,26 @@ public final class ConfigData {
 
     public static int getCoolDownTempmute() {
         return coolDownTempmute;
+    }
+
+    public static int getCoolDownWarn() {
+        return coolDownWarn;
+    }
+
+
+
+    public static String[] getWarnsCountCommands() {
+        return warnsCountCommands;
+    }
+
+
+
+    public static boolean getWarns_AutoExecute() {
+        return Warns_AutoExecute;
+    }
+
+    public static boolean getWarns_DeleteAfterLast() {
+        return Warns_DeleteAfterLast;
     }
 
 // ---------------------------------------------------------------------------------------------------------------------

@@ -22,9 +22,10 @@ public class CommandReload implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (args.length != 0) { return false; }
 
+        //plugin.reloadConfig();
+
         File messagesFile = new File(plugin.getDataFolder() + File.separator + "messages" + File.separator + "messages_ru.yml");
         FileConfiguration messages = YamlConfiguration.loadConfiguration(messagesFile);
-
 
         sender.sendMessage(MessagesData.getMSG_ConfigReloaded());
 

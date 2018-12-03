@@ -3,6 +3,17 @@ MySQL:
   password: password
   url: jdbc:mysql://host:port/database
 
+warns:
+  command_auto_execute: true
+  delete_all_warnings_after_last_warn: true
+  on_warn_count:
+    2:
+      command: 'kick'
+      if_player_is_online: true
+    3:
+      command: 'ban'
+      if_player_is_online: false
+
 cooldowns:
   kick: 30
   ban: 60
@@ -11,3 +22,4 @@ cooldowns:
   mute: 180
   muteip: 190
   tempmute: 200
+  warn: 220

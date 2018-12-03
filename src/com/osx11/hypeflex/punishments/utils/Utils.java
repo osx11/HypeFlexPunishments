@@ -7,6 +7,14 @@ import java.util.regex.Pattern;
 
 public class Utils {
 
+    /*
+    Метод для получения полной причины работает следующим образом:
+    args[] - все наши аргументы;
+    метод берет все аргументы, начинающиеся с индекса index, и записывает их циклом в строковую переменную;
+    если первый символ результата имеет числовой тип, то выдается исключение с сообщением об ошибке;
+    возвращает результат в виде сложенных аргументов в одну строковую переменную
+    */
+
     public static String GetFullReason(String args[], int index) throws InvalidPunishReason {
         String FullReason = "";
         for (int i = index; i < args.length; i++) {

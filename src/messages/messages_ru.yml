@@ -1,4 +1,4 @@
-Prefix: "&7[&eHype&bFlex &cPunishments&7]"
+Prefix: "&7[&eHype&bFlex&cP&7]"
 
 Error: "%prefix% &cПроизошла непредвиденная ошибка. Проверьте консоль"
 ConfigReloaded: "%prefix% &cКонфигурация перезагружена"
@@ -13,6 +13,8 @@ CannotOverride: "%prefix% &cВы не можете перезаписать су
 InvalidTimeIndentifier: "%prefix% &e%value% &cне является допустимым значением. Доступные идентификаторы времени: s - секунды, m - минуты, h - часы, d - сутки, w - недели, mo - месяцы, y - года"
 InvalidPunishReason: "%prefix% &cПричина наказания не может начинаться с числового значения (используйте ':' перед причиной, если вы уверены в своих действиях)"
 NoActiveBans: "%prefix% &cАктивные баны отсутствуют"
+NoActiveWarns: "%prefix% &cУ игрока отсутствуют предупреждения"
+WarnIDNotFound: "%prefix% &cТакой ID не существует. Вот список существующих:"
 
 PunishReasons:
   KickReasonFormat: "&cВы были кикнуты с сервера. Причина: &e%reason%"
@@ -22,6 +24,7 @@ PunishReasons:
   MuteReasonFormat: "&cВы были замучены &eнавсегда&c. Причина: &e%reason%"
   MuteIPReasonFormat: "&cВаш IP-Адрес был замучен. Причина: &e%reason%"
   TempmuteReasonFormat: "&cВы были замучены на &e%punishTime%&c. Причина: &e%reason%&c. Вы должны подождать еще: &e%expire% минут"
+  WarnReasonFormat: "&cВам было выдано предупреждение. Причина: &e%reason%"
   DefaultReason: "&cПричина не указана"
 
 Logging:
@@ -32,10 +35,12 @@ Logging:
   MuteLog: "%prefix% &cИгрок &e%executor% &cзамутил игрока &e%punishableNick%&c. Причина: &e%reason%"
   MuteIPLog: "%prefix% &cИгрок &e%executor% &cзамутил IP-адрес &e%punishableIP%&c. Причина: &e%reason%"
   TempmuteLog: "%prefix% &cИгрок &e%executor% &cзамутил игрока &e%punishableNick% &cна &e%punishTime%&c. Причнина: &e%reason%"
+  WarnLog: "%prefix% &cИгрок &e%executor% &cвыдал предупреждение игроку &e%punishableNick%&c. Причина: &e%reason%"
   UnbanLog: "%prefix% &aИгрок &e%executor% &aразбанил игрока &e%punishableNick%"
   UnbanIPLog: "%prefix% &aИгрок &e%executor% &aразбанил IP-Адрес &e%punishableIP%"
   UnmuteLog: "%prefix% &aИгрок &e%executor% &aразмутил игрока &e%punishableNick%"
   UnmuteIPLog: "%prefix% &aИгрок &e%executor% &aразмутил IP-Адрес &e%punishableIP%"
+  UnwarnLog: "%prefix% &aИгрок &e%executor% &aснял предупреждение с игрока &e%punishableNick%"
 
 TimeIdentifiers:
   Seconds: "секунд(ы)"
