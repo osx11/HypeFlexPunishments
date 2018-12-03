@@ -32,7 +32,7 @@ public class CommandUnban implements CommandExecutor {
         String punishableNick = args[0];
 
         // проверяем, что игрок забанен
-        if (!MySQL.stringIsExist("bans", "nick", punishableNick)) {
+        if (!User.isBanned(punishableNick)) {
             sender.sendMessage(MessagesData.getMSG_PlayerNotFound(punishableNick));
             return true;
         }

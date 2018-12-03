@@ -30,6 +30,7 @@ public final class MessagesData {
     private static String MSG_Exempt;
     private static String MSG_CannotOverride;
     private static String MSG_InvalidTimeIndentifier;
+    private static String MSG_InvalidPunishReason;
     private static String MSG_NoActiveBans;
 
     private static String Reason_KickReasonFormat;
@@ -79,6 +80,7 @@ public final class MessagesData {
             MSG_Exempt = messages.getString("Exempt").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             MSG_CannotOverride = messages.getString("CannotOverride").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             MSG_InvalidTimeIndentifier = messages.getString("InvalidTimeIndentifier").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            MSG_InvalidPunishReason = messages.getString("InvalidPunishReason").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             MSG_NoActiveBans = messages.getString("NoActiveBans").replaceAll("&", "§").replaceAll("%prefix%", prefix);
 
             Reason_KickReasonFormat = messages.getString("PunishReasons.KickReasonFormat").replaceAll("&", "§").replaceAll("%prefix%", prefix);
@@ -157,6 +159,10 @@ public final class MessagesData {
 
     public static String getMSG_InvalidTimeIndentifier(String value) {
         return MSG_InvalidTimeIndentifier.replaceAll("%value%", value);
+    }
+
+    public static String getMSG_InvalidPunishReason() {
+        return MSG_InvalidPunishReason;
     }
 
     public static String getMSG_NoActiveBans() {

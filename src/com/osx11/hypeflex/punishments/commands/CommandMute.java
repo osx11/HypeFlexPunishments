@@ -6,6 +6,7 @@ import com.osx11.hypeflex.punishments.MySQL;
 import com.osx11.hypeflex.punishments.User;
 import com.osx11.hypeflex.punishments.data.ConfigData;
 import com.osx11.hypeflex.punishments.data.MessagesData;
+import com.osx11.hypeflex.punishments.exceptions.InvalidPunishReason;
 import com.osx11.hypeflex.punishments.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -90,14 +91,19 @@ public class CommandMute implements CommandExecutor {
         }
 
         // пишем причину
-        if (forceSpecified) {
-            if (args.length > 2) {
-                reason = Utils.GetFullReason(args, 2);
+        try {
+            if (forceSpecified) {
+                if (args.length > 2) {
+                    reason = Utils.GetFullReason(args, 2);
+                }
+            } else {
+                if (args.length > 1) {
+                    reason = Utils.GetFullReason(args, 1);
+                }
             }
-        } else {
-            if (args.length > 1) {
-                reason = Utils.GetFullReason(args, 1);
-            }
+        } catch (InvalidPunishReason e) {
+            sender.sendMessage(e.getMessage());
+            return true;
         }
 
         // отправляем сообщение о муте
@@ -106,7 +112,7 @@ public class CommandMute implements CommandExecutor {
         }
 
         // добавляем в бд
-        if (MySQL.stringIsExist("mutes", "nick", punishableNick)) {
+        if (User.isMuted(punishableNick)) {
             if (User.hasPermission(sender, "hfp.mute.override")) {
                 MySQL.insert("UPDATE mutes SET punishTimeString=\"*permanent*\", punishTimeSeconds=0, reason=\"" + reason + "\", issuedDate=\"" + date + "\", issuedTime=\"" + time + "\", issuedBy=\"" + sender.getName() + "\" WHERE nick=\"" + punishableNick + "\"");
             } else {

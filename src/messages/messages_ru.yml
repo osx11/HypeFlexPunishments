@@ -11,6 +11,7 @@ InsufficientPermissions: "%prefix% &cУ Вас недостаточно прав
 Exempt: "%prefix% &cУ игрока &e%player% &cиммунитет к данному виду наказания"
 CannotOverride: "%prefix% &cВы не можете перезаписать существующее наказание"
 InvalidTimeIndentifier: "%prefix% &e%value% &cне является допустимым значением. Доступные идентификаторы времени: s - секунды, m - минуты, h - часы, d - сутки, w - недели, mo - месяцы, y - года"
+InvalidPunishReason: "%prefix% &cПричина наказания не может начинаться с числового значения (используйте ':' перед причиной, если вы уверены в своих действиях)"
 NoActiveBans: "%prefix% &cАктивные баны отсутствуют"
 
 PunishReasons:

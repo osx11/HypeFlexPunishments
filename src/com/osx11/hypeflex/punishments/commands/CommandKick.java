@@ -6,6 +6,7 @@ import com.osx11.hypeflex.punishments.MySQL;
 import com.osx11.hypeflex.punishments.User;
 import com.osx11.hypeflex.punishments.data.ConfigData;
 import com.osx11.hypeflex.punishments.data.MessagesData;
+import com.osx11.hypeflex.punishments.exceptions.InvalidPunishReason;
 import com.osx11.hypeflex.punishments.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -63,8 +64,14 @@ public class CommandKick implements CommandExecutor {
         }
 
         // пишем причину
-        if (args.length > 1)
-            reason = Utils.GetFullReason(args, 1);
+        try {
+            if (args.length > 1) {
+                reason = Utils.GetFullReason(args, 1);
+            }
+        } catch (InvalidPunishReason e) {
+            sender.sendMessage(e.getMessage());
+            return true;
+        }
 
         // кикаем
         User.kickUser("kick", player, reason);

@@ -6,11 +6,11 @@ import com.osx11.hypeflex.punishments.MySQL;
 import com.osx11.hypeflex.punishments.User;
 import com.osx11.hypeflex.punishments.data.ConfigData;
 import com.osx11.hypeflex.punishments.data.MessagesData;
+import com.osx11.hypeflex.punishments.exceptions.InvalidPunishReason;
 import com.osx11.hypeflex.punishments.exceptions.InvalidTimeIdentifier;
 import com.osx11.hypeflex.punishments.utils.DateUtils;
 import com.osx11.hypeflex.punishments.utils.Millis2Date;
 import com.osx11.hypeflex.punishments.utils.Utils;
-import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -97,15 +97,19 @@ public class CommandTempban implements CommandExecutor {
         }
 
         // пишем причину
-
-        if (forceSpecified) {
-            if (args.length > 3) {
-                reason = Utils.GetFullReason(args, 3);
+        try {
+            if (forceSpecified) {
+                if (args.length > 3) {
+                    reason = Utils.GetFullReason(args, 3);
+                }
+            } else {
+                if (args.length > 2) {
+                    reason = Utils.GetFullReason(args, 2);
+                }
             }
-        } else {
-            if (args.length > 2) {
-                reason = Utils.GetFullReason(args, 2);
-            }
+        } catch (InvalidPunishReason e) {
+            sender.sendMessage(e.getMessage());
+            return true;
         }
 
         // переводим указанное исполнителем время в секунды и строковой формат
@@ -129,8 +133,7 @@ public class CommandTempban implements CommandExecutor {
         }
 
         // добавляем в бд
-
-        if (MySQL.stringIsExist("bans", "nick", punishableNick)) {
+        if (User.isBanned(punishableNick)) {
             if (User.hasPermission(sender, "hfp.ban.override")) {
                 MySQL.insert("UPDATE bans SET punishTimeString=\"" + punishTimeString + "\", punishTimeSeconds=\"" + punishTimeSeconds + "\", expire=\"" + (System.currentTimeMillis() + (punishTimeSeconds * 1000)) + "\", reason=\"" + reason + "\", issuedDate=\"" + date + "\", issuedTime=\"" + time + "\", issuedBy=\"" + sender.getName() + "\" WHERE nick=\"" + punishableNick + "\"");
             } else {

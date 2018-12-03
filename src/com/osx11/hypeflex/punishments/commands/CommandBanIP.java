@@ -6,6 +6,7 @@ import com.osx11.hypeflex.punishments.MySQL;
 import com.osx11.hypeflex.punishments.User;
 import com.osx11.hypeflex.punishments.data.ConfigData;
 import com.osx11.hypeflex.punishments.data.MessagesData;
+import com.osx11.hypeflex.punishments.exceptions.InvalidPunishReason;
 import com.osx11.hypeflex.punishments.exceptions.PlayerNotFoundInDB;
 import com.osx11.hypeflex.punishments.utils.Utils;
 import org.bukkit.BanList;
@@ -115,14 +116,19 @@ public class CommandBanIP implements CommandExecutor {
         }
 
         // пишем причину
-        if (forceSpecified) {
-            if (args.length > 2) {
-                reason = Utils.GetFullReason(args, 2);
+        try {
+            if (forceSpecified) {
+                if (args.length > 2) {
+                    reason = Utils.GetFullReason(args, 2);
+                }
+            } else {
+                if (args.length > 1) {
+                    reason = Utils.GetFullReason(args, 1);
+                }
             }
-        } else {
-            if (args.length > 1) {
-                reason = Utils.GetFullReason(args, 1);
-            }
+        } catch (InvalidPunishReason e) {
+            sender.sendMessage(e.getMessage());
+            return true;
         }
 
         // кикаем, если онлайн
@@ -131,7 +137,7 @@ public class CommandBanIP implements CommandExecutor {
         }
 
         // добавляем в бд
-        if (MySQL.stringIsExist("bansIP", "IP", punishableIP)) {
+        if (User.isMutedIP(punishableIP)) {
             if (User.hasPermission(sender, "hfp.ban.override")) {
                 MySQL.insert("UPDATE bansIP SET reason=\"" + reason + "\", issuedDate=\"" + date + "\", issuedTime=\"" + time + "\", issuedBy=\"" + sender.getName() + "\" WHERE IP=\"" + punishableIP + "\"");
             } else {

@@ -32,7 +32,7 @@ public class CommandUnmute implements CommandExecutor {
         String punishableNick = args[0];
 
         // проверяем, что игрок замучен
-        if (!MySQL.stringIsExist("mutes", "nick", punishableNick)) {
+        if (!User.isMuted(punishableNick)) {
             sender.sendMessage(MessagesData.getMSG_PlayerNotFound(punishableNick));
             return true;
         }

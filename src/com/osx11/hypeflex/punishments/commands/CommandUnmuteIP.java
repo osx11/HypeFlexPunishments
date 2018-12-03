@@ -56,7 +56,7 @@ public class CommandUnmuteIP implements CommandExecutor {
         }
 
         // проверяем, что игрок забанен
-        if (!MySQL.stringIsExist("mutesIP", "IP", punishableIP)) {
+        if (!User.isMutedIP(punishableIP)) {
             sender.sendMessage(MessagesData.getMSG_IPNotFound(punishableIP));
             return true;
         }

@@ -6,6 +6,7 @@ import com.osx11.hypeflex.punishments.MySQL;
 import com.osx11.hypeflex.punishments.User;
 import com.osx11.hypeflex.punishments.data.ConfigData;
 import com.osx11.hypeflex.punishments.data.MessagesData;
+import com.osx11.hypeflex.punishments.exceptions.InvalidPunishReason;
 import com.osx11.hypeflex.punishments.utils.Utils;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
@@ -91,14 +92,19 @@ public class CommandBan implements CommandExecutor {
         }
 
         // пишем причину
-        if (forceSpecified) {
-            if (args.length > 2) {
-                reason = Utils.GetFullReason(args, 2);
+        try {
+            if (forceSpecified) {
+                if (args.length > 2) {
+                    reason = Utils.GetFullReason(args, 2);
+                }
+            } else {
+                if (args.length > 1) {
+                    reason = Utils.GetFullReason(args, 1);
+                }
             }
-        } else {
-            if (args.length > 1) {
-                reason = Utils.GetFullReason(args, 1);
-            }
+        } catch (InvalidPunishReason e) {
+            sender.sendMessage(e.getMessage());
+            return true;
         }
 
         // кикаем, если онлайн
@@ -107,7 +113,7 @@ public class CommandBan implements CommandExecutor {
         }
 
         // добавляем в бд
-        if (MySQL.stringIsExist("bans", "nick", punishableNick)) {
+        if (User.isBanned(punishableNick)) {
             if (User.hasPermission(sender, "hfp.ban.override")) {
                 MySQL.insert("UPDATE bans SET punishTimeString=\"*permanent*\", punishTimeSeconds=0, reason=\"" + reason + "\", issuedDate=\"" + date + "\", issuedTime=\"" + time + "\", issuedBy=\"" + sender.getName() + "\" WHERE nick=\"" + punishableNick + "\"");
             } else {

@@ -72,5 +72,21 @@ public class User {
         }
     }
 
+    public static boolean isBanned(String nick) {
+        return MySQL.stringIsExist("bans", "nick", nick);
+    }
+
+    public static boolean isBannedIP(String playerIP) {
+        return MySQL.stringIsExist("bansIP", "IP", playerIP);
+    }
+
+    public static boolean isMuted(String nick) {
+        return MySQL.stringIsExist("mutes", "nick", nick);
+    }
+
+    public static boolean isMutedIP(String playerIP) {
+        return MySQL.stringIsExist("mutesIP", "IP", playerIP);
+    }
+
 }
 

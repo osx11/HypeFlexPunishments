@@ -86,33 +86,25 @@ public class Main extends JavaPlugin implements Listener {
         }
         String reason = MySQL.getString("SELECT reason FROM bans WHERE nick=\"" + nick + "\"", "reason");
         String punishTimeString = MySQL.getString("SELECT punishTimeString FROM bans WHERE nick=\"" + nick + "\"", "punishTimeString");
-        boolean isBanned = false;
-        boolean isBannedIP = false;
 
-        if (MySQL.stringIsExist("bans", "nick", nick)) {
-            isBanned = true;
-        }
-        if (MySQL.stringIsExist("bansIP", "IP", playerIP)) {
-            isBannedIP = true;
-        }
         // -----------------------------------------------------------------------------------------------------------------
         // Проверяем, в бане ли игрок
         // по айпи
-        if (isBannedIP) {
+        if (User.isBannedIP(playerIP)) {
             String reasonIP = MySQL.getString("SELECT reason FROM bansIP WHERE IP=\"" + playerIP + "\"", "reason");
             event.disallow(PlayerLoginEvent.Result.KICK_BANNED, MessagesData.getReason_BanIPReasonFormat(reasonIP));
             return; // у бана по айпи самый высокий приоритет, поэтому прерываем метод
         }
 
         // постоянный
-        if (isBanned) {
+        if (User.isBanned(nick)) {
             if (punishTimeString.equals("*permanent*")) {
                 event.disallow(PlayerLoginEvent.Result.KICK_BANNED, MessagesData.getReason_BanReasonFormat(reason));
             }
         }
 
         // временный
-        if (isBanned) {
+        if (User.isBanned(nick)) {
             if (!punishTimeString.equals("*permanent*")) {
                 long expire = MySQL.getLong("SELECT expire FROM bans WHERE nick=\"" + nick + "\"", "expire");
                 if (expire > System.currentTimeMillis()) {
@@ -139,26 +131,17 @@ public class Main extends JavaPlugin implements Listener {
         }
         String reason = MySQL.getString("SELECT reason FROM mutes WHERE nick=\"" + nick + "\"", "reason");
         String punishTimeString = MySQL.getString("SELECT punishTimeString FROM mutes WHERE nick=\"" + nick + "\"", "punishTimeString");
-        boolean isMuted = false;
-        boolean isMutedIP = false;
-
-        if (MySQL.stringIsExist("mutes", "nick", nick)) {
-            isMuted = true;
-        }
-        if (MySQL.stringIsExist("mutesIP", "IP", playerIP)) {
-            isMutedIP = true;
-        }
     // -----------------------------------------------------------------------------------------------------------------
     // Проверяем, в муте ли игрок
         // по айпи
-        if (isMutedIP) {
+        if (User.isMutedIP(playerIP)) {
             String reasonIP = MySQL.getString("SELECT reason FROM mutesIP WHERE IP=\"" + playerIP + "\"", "reason");
             event.setCancelled(true);
             player.sendMessage(MessagesData.getReason_MuteIPReasonFormat(reasonIP));
         }
 
         // временный
-        if (isMuted) {
+        if (User.isMuted(nick)) {
             if (!punishTimeString.equals("*permanent*")) {
                 long expire = MySQL.getLong("SELECT expire FROM mutes WHERE nick=\"" + nick + "\"", "expire");
                 if (expire > System.currentTimeMillis()) {
@@ -172,7 +155,7 @@ public class Main extends JavaPlugin implements Listener {
         }
 
         // перманент
-        if (isMuted) {
+        if (User.isMuted(nick)) {
             if (punishTimeString.equals("*permanent*")) {
                 event.setCancelled(true);
                 player.sendMessage(MessagesData.getReason_MuteReasonFormat(reason));
