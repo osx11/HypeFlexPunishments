@@ -41,7 +41,7 @@
         
 `command_auto_execute`: specified commands in `on_warn_count` will be executed by console, when player's warnings count will be equal to specified count in `on_warn_count`
 
-`delete_all_warnings_after_last_warn`: all player's warnings will be deleted from database, when it will be equal the last element in `on_warn_count`
+`delete_all_warnings_after_last_warn`: all player's warnings will be deleted from database, when it's count will be equal the last element in `on_warn_count`
 
 `cooldowns`: cooldowns for commands in seconds (will have effect only for commands provided by HFP plugin)
 
