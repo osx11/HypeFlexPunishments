@@ -152,7 +152,7 @@ public class CommandBanIP implements CommandExecutor {
         Logging.INFO(MessagesData.getLogging_BanIPLog(sender.getName(), punishableIP, reason));
 
         // бродкастим
-        Bukkit.broadcastMessage(MessagesData.getLogging_BanIPLog(sender.getName(), punishableIP, reason));
+        Bukkit.broadcast(MessagesData.getLogging_BanIPLog(sender.getName(), punishableIP, reason), "hfp.banip.notify");
 
         return true;
     }

@@ -68,7 +68,7 @@ public class CommandUnbanIP implements CommandExecutor {
         Logging.INFO(MessagesData.getLogging_UnbanIPLog(sender.getName(), punishableIP));
 
         // бродкастим
-        Bukkit.broadcastMessage(MessagesData.getLogging_UnbanIPLog(sender.getName(), punishableIP));
+        Bukkit.broadcast(MessagesData.getLogging_UnbanIPLog(sender.getName(), punishableIP), "hfp.unbanip.notify");
 
         return true;
     }

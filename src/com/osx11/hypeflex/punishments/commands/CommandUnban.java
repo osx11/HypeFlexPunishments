@@ -44,7 +44,7 @@ public class CommandUnban implements CommandExecutor {
         Logging.INFO(MessagesData.getLogging_UnbanLog(sender.getName(), punishableNick));
 
         // бродкастим
-        Bukkit.broadcastMessage(MessagesData.getLogging_UnbanLog(sender.getName(), punishableNick));
+        Bukkit.broadcast(MessagesData.getLogging_UnbanLog(sender.getName(), punishableNick), "hfp.unban.notify");
 
         return true;
     }

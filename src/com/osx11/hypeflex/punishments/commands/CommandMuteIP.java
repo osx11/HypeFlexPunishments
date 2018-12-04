@@ -151,7 +151,7 @@ public class CommandMuteIP implements CommandExecutor {
         Logging.INFO(MessagesData.getLogging_MuteIPLog(sender.getName(), punishableIP, reason));
 
         // бродкастим
-        Bukkit.broadcastMessage(MessagesData.getLogging_MuteIPLog(sender.getName(), punishableIP, reason));
+        Bukkit.broadcast(MessagesData.getLogging_MuteIPLog(sender.getName(), punishableIP, reason), "hfp.muteip.notify");
 
         return true;
     }

@@ -68,7 +68,7 @@ public class CommandUnmuteIP implements CommandExecutor {
         Logging.INFO(MessagesData.getLogging_UnmuteIPLog(sender.getName(), punishableIP));
 
         // бродкастим
-        Bukkit.broadcastMessage(MessagesData.getLogging_UnmuteIPLog(sender.getName(), punishableIP));
+        Bukkit.broadcast(MessagesData.getLogging_UnmuteIPLog(sender.getName(), punishableIP), "hfp.unmuteip.notify");
 
         return true;
     }

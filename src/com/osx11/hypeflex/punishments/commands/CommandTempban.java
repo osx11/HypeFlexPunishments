@@ -148,7 +148,7 @@ public class CommandTempban implements CommandExecutor {
         Logging.INFO(MessagesData.getLogging_TempbanLog(sender.getName(), punishableNick, punishTimeString, reason));
 
         // бродкастим
-        Bukkit.broadcastMessage(MessagesData.getLogging_TempbanLog(sender.getName(), punishableNick, punishTimeString, reason));
+        Bukkit.broadcast(MessagesData.getLogging_TempbanLog(sender.getName(), punishableNick, punishTimeString, reason), "hfp.tempban.notify");
 
         return true;
     }

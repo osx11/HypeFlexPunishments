@@ -44,7 +44,7 @@ public class CommandUnmute implements CommandExecutor {
         Logging.INFO(MessagesData.getLogging_UnmuteLog(sender.getName(), punishableNick));
 
         // бродкастим
-        Bukkit.broadcastMessage(MessagesData.getLogging_UnmuteLog(sender.getName(), punishableNick));
+        Bukkit.broadcast(MessagesData.getLogging_UnmuteLog(sender.getName(), punishableNick), "hfp.unmute.notify");
 
         return true;
     }

@@ -81,7 +81,7 @@ public class CommandUnwarn implements CommandExecutor {
 
         Logging.INFO(MessagesData.getLogging_UnwarnLog(sender.getName(), punishableNick));
 
-        Bukkit.broadcastMessage(MessagesData.getLogging_UnwarnLog(sender.getName(), punishableNick));
+        Bukkit.broadcast(MessagesData.getLogging_UnwarnLog(sender.getName(), punishableNick), "hfp.unwarn.notify");
 
         return true;
     }

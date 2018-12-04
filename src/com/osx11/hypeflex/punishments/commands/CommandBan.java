@@ -127,7 +127,7 @@ public class CommandBan implements CommandExecutor {
         Logging.INFO(MessagesData.getLogging_BanLog(sender.getName(), punishableNick, reason));
 
         // бродкастим
-        Bukkit.broadcastMessage(MessagesData.getLogging_BanLog(sender.getName(), punishableNick, reason));
+        Bukkit.broadcast(MessagesData.getLogging_BanLog(sender.getName(), punishableNick, reason), "hfp.ban.notify");
 
         return true;
     }

@@ -152,7 +152,7 @@ public class CommandTempmute implements CommandExecutor {
         Logging.INFO(MessagesData.getLogging_TempmuteLog(sender.getName(), punishableNick, punishTimeString, reason));
 
         // бродкастим
-        Bukkit.broadcastMessage(MessagesData.getLogging_TempmuteLog(sender.getName(), punishableNick, punishTimeString, reason));
+        Bukkit.broadcast(MessagesData.getLogging_TempmuteLog(sender.getName(), punishableNick, punishTimeString, reason), "hfp.tempmute.notify");
 
         return true;
     }

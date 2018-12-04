@@ -122,7 +122,7 @@ public class CommandWarn implements CommandExecutor {
         Logging.INFO(MessagesData.getLogging_WarnLog(sender.getName(), punishableNick, reason));
 
         // бродкастим
-        Bukkit.broadcastMessage(MessagesData.getLogging_WarnLog(sender.getName(), punishableNick, reason));
+        Bukkit.broadcast(MessagesData.getLogging_WarnLog(sender.getName(), punishableNick, reason), "hfp.warn.notify");
 
         //--------------------------------------------------------------------------------------------------------------
         // выполнение автоматических команд

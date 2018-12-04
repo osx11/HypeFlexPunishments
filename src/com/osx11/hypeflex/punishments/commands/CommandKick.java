@@ -83,7 +83,7 @@ public class CommandKick implements CommandExecutor {
         Logging.INFO(MessagesData.getLogging_KickLog(sender.getName(), punishableNick, reason));
 
         // бродкастим
-        Bukkit.broadcastMessage(MessagesData.getLogging_KickLog(sender.getName(), punishableNick, reason));
+        Bukkit.broadcast(MessagesData.getLogging_KickLog(sender.getName(), punishableNick, reason), "hfp.kick.notify");
 
         return true;
     }

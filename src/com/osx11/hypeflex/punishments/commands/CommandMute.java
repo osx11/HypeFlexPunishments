@@ -127,7 +127,7 @@ public class CommandMute implements CommandExecutor {
         Logging.INFO(MessagesData.getLogging_MuteLog(sender.getName(), punishableNick, reason));
 
         // бродкастим
-        Bukkit.broadcastMessage(MessagesData.getLogging_MuteLog(sender.getName(), punishableNick, reason));
+        Bukkit.broadcast(MessagesData.getLogging_MuteLog(sender.getName(), punishableNick, reason), "hfp.mute.notify");
 
         return true;
     }
