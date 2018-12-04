@@ -10,14 +10,14 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class User {
 
-    public static boolean isOnline(Player player) {
+    public static boolean isOnline(final Player player) {
         if (player != null) {
             return true;
         }
         return false;
     }
 
-    public static void kickUser(String reasonFormat, Player player, String reason) {
+    public static void kickUser(final String reasonFormat, final Player player, final String reason) {
         if (reasonFormat.equals("kick")) {
             player.kickPlayer(MessagesData.getReason_KickReasonFormat(reason));
         }
@@ -29,7 +29,7 @@ public class User {
         }
     }
 
-    public static void kickUser(String reasonFormat, Player player, String reason, String punishTimeString, String expire) {
+    public static void kickUser(final String reasonFormat, final Player player, final String reason, final String punishTimeString, final String expire) {
         if (reasonFormat.equals("kick")) {
             player.kickPlayer(MessagesData.getReason_KickReasonFormat(reason));
         }
@@ -44,7 +44,7 @@ public class User {
         }
     }
 
-    public static String getIP(String nick) throws PlayerNotFoundInDB {
+    public static String getIP(final String nick) throws PlayerNotFoundInDB {
         String IP;
         if (MySQL.stringIsExist("players", "nick", nick)) {
             IP = MySQL.getString("SELECT IP FROM players WHERE nick=\"" + nick + "\"", "IP");
@@ -54,8 +54,8 @@ public class User {
         return IP;
     }
 
-    public static boolean hasPermission(String nick, String permission) {
-        Player player = Bukkit.getPlayer(nick);
+    public static boolean hasPermission(final String nick, final String permission) {
+        final Player player = Bukkit.getPlayer(nick);
         if (!User.isOnline(player)) {
             PermissionUser permissionUser = PermissionsEx.getUser(nick);
             return permissionUser.has(permission);
@@ -64,7 +64,16 @@ public class User {
         }
     }
 
-    public static boolean hasPermission(CommandSender sender, String permission) {
+    public static boolean hasPermission(final Player player, final String permission) {
+        if (!User.isOnline(player)) {
+            PermissionUser permissionUser = PermissionsEx.getUser(player);
+            return permissionUser.has(permission);
+        } else {
+            return player.hasPermission(permission);
+        }
+    }
+
+    public static boolean hasPermission(final CommandSender sender, final String permission) {
         if (sender instanceof Player) {
             return User.hasPermission(sender.getName(), permission);
         } else {
@@ -72,19 +81,19 @@ public class User {
         }
     }
 
-    public static boolean isBanned(String nick) {
+    public static boolean isBanned(final String nick) {
         return MySQL.stringIsExist("bans", "nick", nick);
     }
 
-    public static boolean isBannedIP(String playerIP) {
+    public static boolean isBannedIP(final String playerIP) {
         return MySQL.stringIsExist("bansIP", "IP", playerIP);
     }
 
-    public static boolean isMuted(String nick) {
+    public static boolean isMuted(final String nick) {
         return MySQL.stringIsExist("mutes", "nick", nick);
     }
 
-    public static boolean isMutedIP(String playerIP) {
+    public static boolean isMutedIP(final String playerIP) {
         return MySQL.stringIsExist("mutesIP", "IP", playerIP);
     }
 

@@ -28,10 +28,10 @@ public class Main extends JavaPlugin implements Listener {
             saveDefaultConfig();
         }
 
-        File messages = new File(getDataFolder() + File.separator + "messages" + File.separator + "messages_ru.yml");
+        File messages = new File(getDataFolder() + File.separator + "messages.yml");
         if (!messages.exists()) {
             getLogger().info("Creating new messages file...");
-            saveResource("messages/messages_ru.yml", true);
+            saveResource("messages.yml", true);
         }
 
         configData.setConfigData();
@@ -99,9 +99,16 @@ public class Main extends JavaPlugin implements Listener {
         // -----------------------------------------------------------------------------------------------------------------
         // Проверяем, в бане ли игрок
         // по айпи
+
         if (User.isBannedIP(playerIP)) {
             String reasonIP = MySQL.getString("SELECT reason FROM bansIP WHERE IP=\"" + playerIP + "\"", "reason");
             event.disallow(PlayerLoginEvent.Result.KICK_BANNED, MessagesData.getReason_BanIPReasonFormat(reasonIP));
+            // информируем админов
+            for (final Player p : Bukkit.getOnlinePlayers()) {
+                if (User.hasPermission(p, "hfp.notifyDeniedJoin")) {
+                    p.sendMessage(MessagesData.getMSG_AttemptedToJoin(nick));
+                }
+            }
             return; // у бана по айпи самый высокий приоритет, поэтому прерываем метод
         }
 
@@ -109,6 +116,12 @@ public class Main extends JavaPlugin implements Listener {
         if (User.isBanned(nick)) {
             if (punishTimeString.equals("*permanent*")) {
                 event.disallow(PlayerLoginEvent.Result.KICK_BANNED, MessagesData.getReason_BanReasonFormat(reason));
+                // информируем админов
+                for (final Player p : Bukkit.getOnlinePlayers()) {
+                    if (User.hasPermission(p, "hfp.notifyDeniedJoin")) {
+                        p.sendMessage(MessagesData.getMSG_AttemptedToJoin(nick));
+                    }
+                }
             }
         }
 
@@ -118,6 +131,12 @@ public class Main extends JavaPlugin implements Listener {
                 long expire = MySQL.getLong("SELECT expire FROM bans WHERE nick=\"" + nick + "\"", "expire");
                 if (expire > System.currentTimeMillis()) {
                     event.disallow(PlayerLoginEvent.Result.KICK_BANNED, MessagesData.getReason_TempbanReasonFormat(reason, punishTimeString, Millis2Date.convertMillisToDate(expire)));
+                    // информируем админов
+                    for (final Player p : Bukkit.getOnlinePlayers()) {
+                        if (User.hasPermission(p, "hfp.notifyDeniedJoin")) {
+                            p.sendMessage(MessagesData.getMSG_AttemptedToJoin(nick));
+                        }
+                    }
                 } else {
                     MySQL.insert("DELETE FROM bans WHERE nick=\"" + nick + "\"");
                 }

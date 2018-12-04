@@ -24,7 +24,7 @@ public class CommandReload implements CommandExecutor {
 
         //plugin.reloadConfig();
 
-        File messagesFile = new File(plugin.getDataFolder() + File.separator + "messages" + File.separator + "messages_ru.yml");
+        File messagesFile = new File(plugin.getDataFolder() + File.separator + "messages" + File.separator + "messages.yml");
         FileConfiguration messages = YamlConfiguration.loadConfiguration(messagesFile);
 
         sender.sendMessage(MessagesData.getMSG_ConfigReloaded());

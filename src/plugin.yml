@@ -48,7 +48,7 @@ commands:
     usage: '§cUsage: /unmute <ip (or player)>'
   warn:
     description: 'Warn player'
-    usage: '§cUsage: /warn <player> <reason>'
+    usage: '§cUsage: /warn [-f] <player> <reason>'
   warnlist:
     description: 'Shows all warns of player'
     usage: '§cUsage: /warnlist <player>'

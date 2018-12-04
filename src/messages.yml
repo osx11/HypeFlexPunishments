@@ -15,6 +15,7 @@ InvalidPunishReason: "%prefix% &cПричина наказания не може
 NoActiveBans: "%prefix% &cАктивные баны отсутствуют"
 NoActiveWarns: "%prefix% &cУ игрока отсутствуют предупреждения"
 WarnIDNotFound: "%prefix% &cТакой ID не существует. Вот список существующих:"
+AttemptedToJoin: "%prefix% &cИгрок %player% пытался войти на сервер"
 
 PunishReasons:
   KickReasonFormat: "&cВы были кикнуты с сервера. Причина: &e%reason%"

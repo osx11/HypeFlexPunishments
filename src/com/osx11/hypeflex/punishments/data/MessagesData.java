@@ -34,6 +34,7 @@ public final class MessagesData {
     private static String MSG_NoActiveBans;
     private static String MSG_NoActiveWarns;
     private static String MSG_WarnIDNotFound;
+    private static String MSG_AttemptedToJoin;
 
     private static String Reason_KickReasonFormat;
     private static String Reason_BanReasonFormat;
@@ -69,7 +70,7 @@ public final class MessagesData {
 
     public final void setMessagesData() {
         try {
-            File messagesFile = new File(plugin.getDataFolder() + File.separator + "messages" + File.separator + "messages_ru.yml");
+            File messagesFile = new File(plugin.getDataFolder() + File.separator + "messages.yml");
             FileConfiguration messages = YamlConfiguration.loadConfiguration(messagesFile);
 
             prefix = messages.getString("Prefix").replaceAll("&", "§");
@@ -89,6 +90,7 @@ public final class MessagesData {
             MSG_NoActiveBans = messages.getString("NoActiveBans").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             MSG_NoActiveWarns = messages.getString("NoActiveWarns").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             MSG_WarnIDNotFound = messages.getString("WarnIDNotFound").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            MSG_AttemptedToJoin = messages.getString("AttemptedToJoin").replaceAll("&", "§").replaceAll("%prefix%", prefix);
 
             Reason_KickReasonFormat = messages.getString("PunishReasons.KickReasonFormat").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             Reason_BanReasonFormat = messages.getString("PunishReasons.BanReasonFormat").replaceAll("&", "§").replaceAll("%prefix%", prefix);
@@ -147,11 +149,11 @@ public final class MessagesData {
         return MSG_PlayerNotFound.replaceAll("%player%", player);
     }
 
-    public static String getMSG_IPNotFound(String IP) {
+    public static String getMSG_IPNotFound(final String IP) {
         return MSG_IPNotFound.replaceAll("%ip%", IP);
     }
 
-    public static String getMSG_Cooldown(String cooldown) {
+    public static String getMSG_Cooldown(final String cooldown) {
         return MSG_Cooldown.replaceAll("%cooldown%", cooldown);
     }
 
@@ -159,7 +161,7 @@ public final class MessagesData {
         return MSG_InsufficientPermissions;
     }
 
-    public static String getMSG_Exempt(String player) {
+    public static String getMSG_Exempt(final String player) {
         return MSG_Exempt.replaceAll("%player%", player);
     }
 
@@ -167,7 +169,7 @@ public final class MessagesData {
         return MSG_CannotOverride;
     }
 
-    public static String getMSG_InvalidTimeIndentifier(String value) {
+    public static String getMSG_InvalidTimeIndentifier(final String value) {
         return MSG_InvalidTimeIndentifier.replaceAll("%value%", value);
     }
 
@@ -187,37 +189,40 @@ public final class MessagesData {
         return MSG_WarnIDNotFound;
     }
 
+    public static String getMSG_AttemptedToJoin(final String player) {
+        return MSG_AttemptedToJoin.replaceAll("%player%", player);
+    }
 
 
-    public static String getReason_KickReasonFormat(String reason) {
+    public static String getReason_KickReasonFormat(final String reason) {
         return Reason_KickReasonFormat.replaceAll("%reason%", reason);
     }
 
-    public static String getReason_BanReasonFormat(String reason) {
+    public static String getReason_BanReasonFormat(final String reason) {
         return Reason_BanReasonFormat.replaceAll("%reason%", reason);
     }
 
-    public static String getReason_BanIPReasonFormat(String reason) {
+    public static String getReason_BanIPReasonFormat(final String reason) {
         return Reason_BanIPReasonFormat.replaceAll("%reason%", reason);
     }
 
-    public static String getReason_TempbanReasonFormat(String reason, String punishTimeString, String expire) {
+    public static String getReason_TempbanReasonFormat(final String reason, final String punishTimeString, final String expire) {
         return Reason_TempbanReasonFormat.replaceAll("%reason%", reason).replaceAll("%punishTime%", punishTimeString).replaceAll("%expire%", expire);
     }
 
-    public static String getReason_MuteReasonFormat(String reason) {
+    public static String getReason_MuteReasonFormat(final String reason) {
         return Reason_MuteReasonFormat.replaceAll("%reason%", reason);
     }
 
-    public static String getReason_MuteIPReasonFormat(String reason) {
+    public static String getReason_MuteIPReasonFormat(final String reason) {
         return Reason_MuteIPReasonFormat.replaceAll("%reason%", reason);
     }
 
-    public static String getReason_TempmuteReasonFormat(String reason, String punishTimeString, String expire) {
+    public static String getReason_TempmuteReasonFormat(final String reason, final String punishTimeString, final String expire) {
         return Reason_TempmuteReasonFormat.replaceAll("%reason%", reason).replaceAll("%punishTime%", punishTimeString).replaceAll("%expire%", expire);
     }
 
-    public static String getReason_WarnReasonFormat(String reason) {
+    public static String getReason_WarnReasonFormat(final String reason) {
         return Reason_WarnReasonFormat.replaceAll("%reason%", reason);
     }
 
@@ -227,55 +232,55 @@ public final class MessagesData {
 
 
 
-    public static String getLogging_KickLog(String executor, String punishableNick, String reason) {
+    public static String getLogging_KickLog(final String executor, final String punishableNick, final String reason) {
         return Logging_KickLog.replaceAll("%executor%", executor).replaceAll("%punishableNick%", punishableNick).replaceAll("%reason%", reason);
     }
 
-    public static String getLogging_BanLog(String executor, String punishableNick, String reason) {
+    public static String getLogging_BanLog(final String executor, final String punishableNick, final String reason) {
         return Logging_BanLog.replaceAll("%executor%", executor).replaceAll("%punishableNick%", punishableNick).replaceAll("%reason%", reason);
     }
 
-    public static String getLogging_BanIPLog(String executor, String punishableIP, String reason) {
+    public static String getLogging_BanIPLog(final String executor, final String punishableIP, final String reason) {
         return Logging_BanIPLog.replaceAll("%executor%", executor).replaceAll("%punishableIP%", punishableIP).replaceAll("%reason%", reason);
     }
 
-    public static String getLogging_TempbanLog(String executor, String punishableNick, String punishTimeString, String reason) {
+    public static String getLogging_TempbanLog(final String executor, final String punishableNick, final String punishTimeString, final String reason) {
         return Logging_TempbanLog.replaceAll("%executor%", executor).replaceAll("%punishableNick%", punishableNick).replaceAll("%punishTime%", punishTimeString).replaceAll("%reason%", reason);
     }
 
-    public static String getLogging_MuteLog(String executor, String punishableNick, String reason) {
+    public static String getLogging_MuteLog(final String executor, final String punishableNick, final String reason) {
         return Logging_MuteLog.replaceAll("%executor%", executor).replaceAll("%punishableNick%", punishableNick).replaceAll("%reason%", reason);
     }
 
-    public static String getLogging_MuteIPLog(String executor, String punishableIP, String reason) {
+    public static String getLogging_MuteIPLog(final String executor, final String punishableIP, final String reason) {
         return Logging_MuteIPLog.replaceAll("%executor%", executor).replaceAll("%punishableIP%", punishableIP).replaceAll("%reason%", reason);
     }
 
-    public static String getLogging_TempmuteLog(String executor, String punishableNick, String punishTimeString, String reason) {
+    public static String getLogging_TempmuteLog(final String executor, final String punishableNick, final String punishTimeString, final String reason) {
         return Logging_TempmuteLog.replaceAll("%executor%", executor).replaceAll("%punishableNick%", punishableNick).replaceAll("%punishTime%", punishTimeString).replaceAll("%reason%", reason);
     }
 
-    public static String getLogging_WarnLog(String executor, String punishableNick, String reason) {
+    public static String getLogging_WarnLog(final String executor, final String punishableNick, final String reason) {
         return Logging_WarnLog.replaceAll("%executor%", executor).replaceAll("%punishableNick%", punishableNick).replaceAll("%reason%", reason);
     }
 
-    public static String getLogging_UnbanLog(String executor, String punishableNick) {
+    public static String getLogging_UnbanLog(final String executor, final String punishableNick) {
         return Logging_UnbanLog.replaceAll("%executor%", executor).replaceAll("%punishableNick%", punishableNick);
     }
 
-    public static String getLogging_UnbanIPLog(String executor, String punishableIP) {
+    public static String getLogging_UnbanIPLog(final String executor, final String punishableIP) {
         return Logging_UnbanIPLog.replaceAll("%executor%", executor).replaceAll("%punishableIP%", punishableIP);
     }
 
-    public static String getLogging_UnmuteLog(String executor, String punishableNick) {
+    public static String getLogging_UnmuteLog(final String executor, final String punishableNick) {
         return Logging_UnmuteLog.replaceAll("%executor%", executor).replaceAll("%punishableNick%", punishableNick);
     }
 
-    public static String getLogging_UnmuteIPLog(String executor, String punishableIP) {
+    public static String getLogging_UnmuteIPLog(final String executor, final String punishableIP) {
         return Logging_UnmuteIPLog.replaceAll("%executor%", executor).replaceAll("%punishableIP%", punishableIP);
     }
 
-    public static String getLogging_UnwarnLog(String executor, String punishableNick) {
+    public static String getLogging_UnwarnLog(final String executor, final String punishableNick) {
         return Logging_UnwarnLog.replaceAll("%executor%", executor).replaceAll("%punishableNick%", punishableNick);
     }
 
