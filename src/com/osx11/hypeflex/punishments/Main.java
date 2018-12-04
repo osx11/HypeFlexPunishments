@@ -69,7 +69,6 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent event) {
-        Bukkit.broadcastMessage(Bukkit.getServerName());
         final String nick = event.getPlayer().getName();
         final Player player = event.getPlayer();
         final String UUID = player.getUniqueId().toString();
