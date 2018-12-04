@@ -1,10 +1,13 @@
 package com.osx11.hypeflex.punishments;
 
+import com.comphenix.protocol.ProtocolLib;
+import com.comphenix.protocol.ProtocolLibrary;
 import com.osx11.hypeflex.punishments.commands.*;
 import com.osx11.hypeflex.punishments.data.ConfigData;
 import com.osx11.hypeflex.punishments.data.MessagesData;
 import com.osx11.hypeflex.punishments.exceptions.PlayerNotFoundInDB;
 import com.osx11.hypeflex.punishments.utils.Millis2Date;
+import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -68,38 +71,24 @@ public class Main extends JavaPlugin implements Listener {
 // ---------------------------------------------------------------------------------------------------------------------
 
     @EventHandler
-    public void onPlayerJoin(final PlayerJoinEvent event) {
+    public void onPlayerLogin(final PlayerLoginEvent event) {
+        // -----------------------------------------------------------------------------------------------------------------
+        // Записываем UUID в базу, если не сущесвует
         final String nick = event.getPlayer().getName();
         final Player player = event.getPlayer();
         final String UUID = player.getUniqueId().toString();
-        final String playerIP = player.getAddress().getAddress().toString().replace("/", "");
-    // -----------------------------------------------------------------------------------------------------------------
-    // Записываем UUID в базу, если не сущесвует
+        final String playerIP = event.getAddress().toString().replaceAll("/", "");
         if (!MySQL.stringIsExist("players", "nick", nick)) {
             MySQL.insert("INSERT INTO players SET IP=\"" + playerIP + "\", nick=\"" + nick + "\", UUID=\"" + UUID + "\"");
         }
-    // -----------------------------------------------------------------------------------------------------------------
-    }
+        // -----------------------------------------------------------------------------------------------------------------
 
-    @EventHandler
-    public void onPlayerLogin(final PlayerLoginEvent event) {
-        final String nick = event.getPlayer().getName();
-        final Player player = event.getPlayer();
-        String playerIP;
-        try {
-            playerIP = User.getIP(nick);
-        } catch (PlayerNotFoundInDB e) {
-            Logging.WARNING(e.getMessage());
-            User.kickUser("kick", player, MessagesData.getMSG_Error());
-            return;
-        }
         final String reason = MySQL.getString("SELECT reason FROM bans WHERE nick=\"" + nick + "\"", "reason");
         final String punishTimeString = MySQL.getString("SELECT punishTimeString FROM bans WHERE nick=\"" + nick + "\"", "punishTimeString");
 
         // -----------------------------------------------------------------------------------------------------------------
         // Проверяем, в бане ли игрок
         // по айпи
-
         if (User.isBannedIP(playerIP)) {
             String reasonIP = MySQL.getString("SELECT reason FROM bansIP WHERE IP=\"" + playerIP + "\"", "reason");
             event.disallow(PlayerLoginEvent.Result.KICK_BANNED, MessagesData.getReason_BanIPReasonFormat(reasonIP));
@@ -109,7 +98,7 @@ public class Main extends JavaPlugin implements Listener {
                     p.sendMessage(MessagesData.getMSG_AttemptedToJoin(nick));
                 }
             }
-            return; // у бана по айпи самый высокий приоритет, поэтому прерываем метод
+            return; // у бана по айпи самый высокий приоритет
         }
 
         // постоянный
@@ -128,7 +117,7 @@ public class Main extends JavaPlugin implements Listener {
         // временный
         if (User.isBanned(nick)) {
             if (!punishTimeString.equals("*permanent*")) {
-                long expire = MySQL.getLong("SELECT expire FROM bans WHERE nick=\"" + nick + "\"", "expire");
+                final long expire = MySQL.getLong("SELECT expire FROM bans WHERE nick=\"" + nick + "\"", "expire");
                 if (expire > System.currentTimeMillis()) {
                     event.disallow(PlayerLoginEvent.Result.KICK_BANNED, MessagesData.getReason_TempbanReasonFormat(reason, punishTimeString, Millis2Date.convertMillisToDate(expire)));
                     // информируем админов
