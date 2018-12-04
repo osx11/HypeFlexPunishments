@@ -95,4 +95,6 @@
 
 `hfp.ban.exempt` - protects player from kick
 
-`hfp.[command].cooldownBypass` - allows player bypass command cooldown 
+`hfp.[command].cooldownBypass` - allows player bypass command cooldown
+
+`hfp.notifyDeniedJoin` - notifies all players with this permission, when player is banned and he's trying to join the server
