@@ -6,8 +6,8 @@
 * MySQL database support
 * All your punishments, that you've issued on the one server, will take effect on all others servers connected to the same database _(will be redesigned in near future by adding bungeecord support)_
 * Players cannot override the existing punishment without permission `hfp.[command].override`
-* Silent punishments with `-s` flag _(in development)_*
-* Support offline mode *
+* Silent punishments with `-s` flag _(in development)_
+* Support offline mode
 * Web interface _(in development)_*
 
 
@@ -95,4 +95,6 @@
 
 `hfp.ban.exempt` - protects player from kick
 
-`hfp.[command].cooldownBypass` - allows player bypass command cooldown 
+`hfp.[command].cooldownBypass` - allows player bypass command cooldown
+
+`hfp.notifyDeniedJoin` - notifies all players with this permission, when player is banned and he's trying to join the server
