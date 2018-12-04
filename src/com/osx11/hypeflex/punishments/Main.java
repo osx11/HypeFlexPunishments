@@ -5,6 +5,7 @@ import com.osx11.hypeflex.punishments.data.ConfigData;
 import com.osx11.hypeflex.punishments.data.MessagesData;
 import com.osx11.hypeflex.punishments.exceptions.PlayerNotFoundInDB;
 import com.osx11.hypeflex.punishments.utils.Millis2Date;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -62,16 +63,17 @@ public class Main extends JavaPlugin implements Listener {
     public void onDisable() { getLogger().info("---------- HF Punishments SHUTTING DOWN ----------"); }
 
 // ---------------------------------------------------------------------------------------------------------------------
-    private ConfigData configData = new ConfigData(this);
-    private MessagesData messagesData = new MessagesData(this);
+    private final ConfigData configData = new ConfigData(this);
+    private final MessagesData messagesData = new MessagesData(this);
 // ---------------------------------------------------------------------------------------------------------------------
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        String nick = event.getPlayer().getName();
-        Player player = event.getPlayer();
-        String UUID = player.getUniqueId().toString();
-        String playerIP = player.getAddress().getAddress().toString().replace("/", "");
+    public void onPlayerJoin(final PlayerJoinEvent event) {
+        Bukkit.broadcastMessage(Bukkit.getServerName());
+        final String nick = event.getPlayer().getName();
+        final Player player = event.getPlayer();
+        final String UUID = player.getUniqueId().toString();
+        final String playerIP = player.getAddress().getAddress().toString().replace("/", "");
     // -----------------------------------------------------------------------------------------------------------------
     // Записываем UUID в базу, если не сущесвует
         if (!MySQL.stringIsExist("players", "nick", nick)) {
@@ -81,9 +83,9 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onPlayerLogin(PlayerLoginEvent event) {
-        String nick = event.getPlayer().getName();
-        Player player = event.getPlayer();
+    public void onPlayerLogin(final PlayerLoginEvent event) {
+        final String nick = event.getPlayer().getName();
+        final Player player = event.getPlayer();
         String playerIP;
         try {
             playerIP = User.getIP(nick);
@@ -92,8 +94,8 @@ public class Main extends JavaPlugin implements Listener {
             User.kickUser("kick", player, MessagesData.getMSG_Error());
             return;
         }
-        String reason = MySQL.getString("SELECT reason FROM bans WHERE nick=\"" + nick + "\"", "reason");
-        String punishTimeString = MySQL.getString("SELECT punishTimeString FROM bans WHERE nick=\"" + nick + "\"", "punishTimeString");
+        final String reason = MySQL.getString("SELECT reason FROM bans WHERE nick=\"" + nick + "\"", "reason");
+        final String punishTimeString = MySQL.getString("SELECT punishTimeString FROM bans WHERE nick=\"" + nick + "\"", "punishTimeString");
 
         // -----------------------------------------------------------------------------------------------------------------
         // Проверяем, в бане ли игрок
@@ -126,9 +128,9 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onChatEvent(AsyncPlayerChatEvent event) {
-        String nick = event.getPlayer().getName();
-        Player player = event.getPlayer();
+    public void onChatEvent(final AsyncPlayerChatEvent event) {
+        final String nick = event.getPlayer().getName();
+        final Player player = event.getPlayer();
         String playerIP;
         try {
             playerIP = User.getIP(nick);
@@ -137,8 +139,8 @@ public class Main extends JavaPlugin implements Listener {
             User.kickUser("kick", player, MessagesData.getMSG_Error());
             return;
         }
-        String reason = MySQL.getString("SELECT reason FROM mutes WHERE nick=\"" + nick + "\"", "reason");
-        String punishTimeString = MySQL.getString("SELECT punishTimeString FROM mutes WHERE nick=\"" + nick + "\"", "punishTimeString");
+        final String reason = MySQL.getString("SELECT reason FROM mutes WHERE nick=\"" + nick + "\"", "reason");
+        final String punishTimeString = MySQL.getString("SELECT punishTimeString FROM mutes WHERE nick=\"" + nick + "\"", "punishTimeString");
     // -----------------------------------------------------------------------------------------------------------------
     // Проверяем, в муте ли игрок
         // по айпи

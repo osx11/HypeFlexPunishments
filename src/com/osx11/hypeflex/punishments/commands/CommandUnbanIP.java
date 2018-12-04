@@ -34,11 +34,11 @@ public class CommandUnbanIP implements CommandExecutor {
         }
 
         boolean found = false;
-        String punishableNick = args[0];
+        final String punishableNick = args[0];
         String punishableIP = "";
 
-        Pattern IPPattern = Pattern.compile("((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))");
-        Matcher matcher = IPPattern.matcher(punishableNick);
+        final Pattern IPPattern = Pattern.compile("((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))");
+        final Matcher matcher = IPPattern.matcher(punishableNick);
         while (matcher.find()) {
             if (matcher.group(1) != null) {
                 punishableIP = matcher.group(1);
@@ -56,7 +56,7 @@ public class CommandUnbanIP implements CommandExecutor {
         }
 
         // проверяем, что игрок забанен
-        if (!User.isMutedIP(punishableIP)) {
+        if (!User.isBannedIP(punishableIP)) {
             sender.sendMessage(MessagesData.getMSG_IPNotFound(punishableIP));
             return true;
         }

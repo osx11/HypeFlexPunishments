@@ -65,11 +65,11 @@ public class CommandTempmute implements CommandExecutor {
         GregorianCalendar gregorianCalendar = new GregorianCalendar();
 
         String reason = MessagesData.getReason_DefaultReason();
-        Player player = Bukkit.getPlayer(punishableNick);
-        String UUID = MySQL.getString("SELECT UUID FROM players WHERE nick=\"" + punishableNick + "\"", "UUID");
-        int cooldownConfig = ConfigData.getCoolDownTempmute();
-        String date = String.valueOf(gregorianCalendar.get(Calendar.YEAR)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.MONTH)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.DATE));
-        String time = String.valueOf(gregorianCalendar.get(Calendar.HOUR)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.MINUTE)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.SECOND));
+        final Player player = Bukkit.getPlayer(punishableNick);
+        final String UUID = MySQL.getString("SELECT UUID FROM players WHERE nick=\"" + punishableNick + "\"", "UUID");
+        final int cooldownConfig = ConfigData.getCoolDownTempmute();
+        final String date = String.valueOf(gregorianCalendar.get(Calendar.YEAR)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.MONTH)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.DATE));
+        final String time = String.valueOf(gregorianCalendar.get(Calendar.HOUR)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.MINUTE)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.SECOND));
 
         // если игрок не найден
         if (!User.isOnline(player)) {
@@ -93,7 +93,7 @@ public class CommandTempmute implements CommandExecutor {
 
         // проверяем активно ли кд
         if (sender instanceof Player) {
-            if (coolDown.hasCoolDown(Bukkit.getPlayer(sender.getName()), punishableNick, "tempmute", cooldownConfig))
+            if (coolDown.hasCoolDown(Bukkit.getPlayer(sender.getName()), "tempmute", cooldownConfig))
                 return true;
         }
 

@@ -67,7 +67,7 @@ public final class MessagesData {
     private static String TimeIdentifier_Months;
     private static String TimeIdentifier_Years;
 
-    public void setMessagesData() {
+    public final void setMessagesData() {
         try {
             File messagesFile = new File(plugin.getDataFolder() + File.separator + "messages" + File.separator + "messages_ru.yml");
             FileConfiguration messages = YamlConfiguration.loadConfiguration(messagesFile);

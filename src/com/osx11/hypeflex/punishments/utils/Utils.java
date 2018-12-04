@@ -15,7 +15,7 @@ public class Utils {
     возвращает результат в виде сложенных аргументов в одну строковую переменную
     */
 
-    public static String GetFullReason(String args[], int index) throws InvalidPunishReason {
+    public static String GetFullReason(final String args[], final int index) throws InvalidPunishReason {
         String FullReason = "";
         for (int i = index; i < args.length; i++) {
             if (i == args.length - 1)

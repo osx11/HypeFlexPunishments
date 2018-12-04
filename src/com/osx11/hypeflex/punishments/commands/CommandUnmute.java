@@ -29,7 +29,7 @@ public class CommandUnmute implements CommandExecutor {
             return false;
         }
 
-        String punishableNick = args[0];
+        final String punishableNick = args[0];
 
         // проверяем, что игрок замучен
         if (!User.isMuted(punishableNick)) {

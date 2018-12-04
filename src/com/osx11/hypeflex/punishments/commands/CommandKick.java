@@ -38,12 +38,12 @@ public class CommandKick implements CommandExecutor {
 
         GregorianCalendar gregorianCalendar = new GregorianCalendar();
 
-        String punishableNick = args[0];
+        final String punishableNick = args[0];
         String reason = MessagesData.getReason_DefaultReason();
-        Player player = Bukkit.getPlayer(punishableNick);
-        int cooldownConfig = ConfigData.getCoolDownKick();
-        String date = String.valueOf(gregorianCalendar.get(Calendar.YEAR)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.MONTH)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.DATE));
-        String time = String.valueOf(gregorianCalendar.get(Calendar.HOUR)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.MINUTE)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.SECOND));
+        final Player player = Bukkit.getPlayer(punishableNick);
+        final int cooldownConfig = ConfigData.getCoolDownKick();
+        final String date = String.valueOf(gregorianCalendar.get(Calendar.YEAR)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.MONTH)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.DATE));
+        final String time = String.valueOf(gregorianCalendar.get(Calendar.HOUR)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.MINUTE)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.SECOND));
 
         // если игрок оффлайн
         if (!User.isOnline(player)) {
@@ -59,7 +59,7 @@ public class CommandKick implements CommandExecutor {
 
         // проверяем на активное кд
         if (sender instanceof Player) {
-            if (coolDown.hasCoolDown(Bukkit.getPlayer(sender.getName()), punishableNick, "kick", cooldownConfig))
+            if (coolDown.hasCoolDown(Bukkit.getPlayer(sender.getName()), "kick", cooldownConfig))
                 return true;
         }
 

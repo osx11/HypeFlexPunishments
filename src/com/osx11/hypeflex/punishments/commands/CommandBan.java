@@ -8,7 +8,6 @@ import com.osx11.hypeflex.punishments.data.ConfigData;
 import com.osx11.hypeflex.punishments.data.MessagesData;
 import com.osx11.hypeflex.punishments.exceptions.InvalidPunishReason;
 import com.osx11.hypeflex.punishments.utils.Utils;
-import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -59,11 +58,11 @@ public class CommandBan implements CommandExecutor {
         GregorianCalendar gregorianCalendar = new GregorianCalendar();
 
         String reason = MessagesData.getReason_DefaultReason();
-        Player player = Bukkit.getPlayer(punishableNick);
-        String UUID = MySQL.getString("SELECT UUID FROM players WHERE nick=\"" + punishableNick + "\"", "UUID");
-        int cooldownConfig = ConfigData.getCoolDownBan();
-        String date = String.valueOf(gregorianCalendar.get(Calendar.YEAR)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.MONTH)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.DATE));
-        String time = String.valueOf(gregorianCalendar.get(Calendar.HOUR)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.MINUTE)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.SECOND));
+        final Player player = Bukkit.getPlayer(punishableNick);
+        final String UUID = MySQL.getString("SELECT UUID FROM players WHERE nick=\"" + punishableNick + "\"", "UUID");
+        final int cooldownConfig = ConfigData.getCoolDownBan();
+        final String date = String.valueOf(gregorianCalendar.get(Calendar.YEAR)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.MONTH)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.DATE));
+        final String time = String.valueOf(gregorianCalendar.get(Calendar.HOUR)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.MINUTE)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.SECOND));
 
         // если игрок не найден
         if (!User.isOnline(player)) {
@@ -87,7 +86,7 @@ public class CommandBan implements CommandExecutor {
 
         // проверяем активно ли кд
         if (sender instanceof Player) {
-            if (coolDown.hasCoolDown(Bukkit.getPlayer(sender.getName()), punishableNick, "ban", cooldownConfig))
+            if (coolDown.hasCoolDown(Bukkit.getPlayer(sender.getName()), "ban", cooldownConfig))
                 return true;
         }
 

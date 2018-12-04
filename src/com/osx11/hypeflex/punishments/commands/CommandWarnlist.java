@@ -26,7 +26,7 @@ public class CommandWarnlist implements CommandExecutor {
 
         if (args.length != 1) { return false; }
 
-        String punishableNick = args[0];
+        final String punishableNick = args[0];
 
         if (MySQL.getWarnlist(punishableNick).length == 0) {
             sender.sendMessage(MessagesData.getMSG_NoActiveWarns());

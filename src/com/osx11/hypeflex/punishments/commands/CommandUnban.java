@@ -29,7 +29,7 @@ public class CommandUnban implements CommandExecutor {
             return false;
         }
 
-        String punishableNick = args[0];
+        final String punishableNick = args[0];
 
         // проверяем, что игрок забанен
         if (!User.isBanned(punishableNick)) {

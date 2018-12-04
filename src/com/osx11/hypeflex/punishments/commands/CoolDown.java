@@ -9,10 +9,10 @@ import java.util.Objects;
 
 public class CoolDown {
 
-    public boolean hasCoolDown(Player player, String nick, String command, int cooldownConfig) {
-        String UUID = player.getUniqueId().toString();
-        String sql_GetUUID = "SELECT UUID FROM cooldowns WHERE UUID=\"" + UUID + "\" AND command=\"" + command + "\"";
-        String sql_GetCoolDown = "SELECT cooldown FROM cooldowns WHERE UUID=\"" + UUID + "\" AND command=\"" + command +"\"";
+    public boolean hasCoolDown(final Player player, final String command, final int cooldownConfig) {
+        final String UUID = player.getUniqueId().toString();
+        final String sql_GetUUID = "SELECT UUID FROM cooldowns WHERE UUID=\"" + UUID + "\" AND command=\"" + command + "\"";
+        final String sql_GetCoolDown = "SELECT cooldown FROM cooldowns WHERE UUID=\"" + UUID + "\" AND command=\"" + command +"\"";
 
         if (!player.hasPermission("hfp." + command + ".cooldownBypass")) {
             if (MySQL.getString(sql_GetUUID, "UUID") != null) {
