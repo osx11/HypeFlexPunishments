@@ -7,7 +7,7 @@
 * All your punishments, that you've issued on the one server, will take effect on all others servers connected to the same database _(will be redesigned in near future by adding bungeecord support)_
 * Players cannot override the existing punishment without permission `hfp.[command].override`
 * Silent punishments with `-s` flag _(in development)_*
-* Support offline mode *
+* Support offline mode
 * Web interface _(in development)_*
 
 
