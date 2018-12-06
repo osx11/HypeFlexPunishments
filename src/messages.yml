@@ -43,6 +43,23 @@ Logging:
   UnmuteIPLog: "%prefix% &aИгрок &e%executor% &aразмутил IP-Адрес &e%punishableIP%"
   UnwarnLog: "%prefix% &aИгрок &e%executor% &aснял предупреждение с игрока &e%punishableNick%"
 
+PlayerInfo:
+  InfoAbout: '&fИнформация об игроке: &c%punishableNick% %state%'
+  IP: '&fIP-Адрес: &c%punishableIP%'
+  IPIsBanned: '&fIP забанен: %state%'
+  IPIsMuted: '&fIP замучен: %state%'
+  isBanned: '&fЗабанен: %state%'
+  isMuted: '&fЗамучен: %state%'
+  PunishReason: '&fПричина: &c%reason%'
+  PunishInitiator: '&fИнициатор: &c%executor%'
+  PunishTime: '&fВремя наказания: &c%punishTimeString%'
+  PunishExpire: '&fИстекает: &c%expire%'
+  isOnline: '&7[&aОнлайн&7]'
+  isOffline: '&7[&cОффлайн&7]'
+  stateYes: '&cда'
+  stateNo: '&aнет'
+  timePermanent: '&cнавсегда'
+
 TimeIdentifiers:
   Seconds: "секунд(ы)"
   Minutes: "минут(ы)"

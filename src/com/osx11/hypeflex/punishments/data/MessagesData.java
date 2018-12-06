@@ -60,6 +60,22 @@ public final class MessagesData {
     private static String Logging_UnmuteIPLog;
     private static String Logging_UnwarnLog;
 
+    private static String PINFO_InfoAbout;
+    private static String PINFO_IP;
+    private static String PINFO_IPIsBanned;
+    private static String PINFO_IPIsMuted;
+    private static String PINFO_isBanned;
+    private static String PINFO_isMuted;
+    private static String PINFO_PunishReason;
+    private static String PINFO_PunishInitiator;
+    private static String PINFO_PunishTime;
+    private static String PINFO_PunishExpire;
+    private static String PINFO_isOnline;
+    private static String PINFO_isOffline;
+    private static String PINFO_stateYes;
+    private static String PINFO_stateNo;
+    private static String PINFO_timePermanent;
+
     private static String TimeIdentifier_Seconds;
     private static String TimeIdentifier_Minutes;
     private static String TimeIdentifier_Hours;
@@ -115,6 +131,22 @@ public final class MessagesData {
             Logging_UnmuteLog = messages.getString("Logging.UnmuteLog").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             Logging_UnmuteIPLog = messages.getString("Logging.UnmuteIPLog").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             Logging_UnwarnLog = messages.getString("Logging.UnwarnLog").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+
+            PINFO_InfoAbout = messages.getString("PlayerInfo.InfoAbout").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_IP = messages.getString("PlayerInfo.IP").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_IPIsBanned = messages.getString("PlayerInfo.IPIsBanned").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_IPIsMuted = messages.getString("PlayerInfo.IPIsMuted").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_isBanned = messages.getString("PlayerInfo.isBanned").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_isMuted = messages.getString("PlayerInfo.isMuted").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_PunishReason = messages.getString("PlayerInfo.PunishReason").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_PunishInitiator = messages.getString("PlayerInfo.PunishInitiator").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_PunishTime = messages.getString("PlayerInfo.PunishTime").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_PunishExpire = messages.getString("PlayerInfo.PunishExpire").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_isOnline = messages.getString("PlayerInfo.isOnline").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_isOffline = messages.getString("PlayerInfo.isOffline").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_stateYes = messages.getString("PlayerInfo.stateYes").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_stateNo = messages.getString("PlayerInfo.stateNo").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_timePermanent = messages.getString("PlayerInfo.timePermanent").replaceAll("&", "§").replaceAll("%prefix%", prefix);
 
             TimeIdentifier_Seconds = messages.getString("TimeIdentifiers.Seconds");
             TimeIdentifier_Minutes = messages.getString("TimeIdentifiers.Minutes");
@@ -282,6 +314,68 @@ public final class MessagesData {
 
     public static String getLogging_UnwarnLog(final String executor, final String punishableNick) {
         return Logging_UnwarnLog.replaceAll("%executor%", executor).replaceAll("%punishableNick%", punishableNick);
+    }
+
+
+
+    public static String getPINFO_InfoAbout(String punishableNick, String state) {
+        return PINFO_InfoAbout.replaceAll("%punishableNick%", punishableNick).replaceAll("%state%", state);
+    }
+
+    public static String getPINFO_IP(String punishableIP) {
+        return PINFO_IP.replaceAll("%punishableIP%", punishableIP);
+    }
+
+    public static String getPINFO_IPIsBanned(String state) {
+        return PINFO_IPIsBanned.replaceAll("%state%", state);
+    }
+
+    public static String getPINFO_IPIsMuted(String state) {
+        return PINFO_IPIsMuted.replaceAll("%state%", state);
+    }
+
+    public static String getPINFO_isBanned(String state) {
+        return PINFO_isBanned.replaceAll("%state%", state);
+    }
+
+    public static String getPINFO_isMuted(String state) {
+        return PINFO_isMuted.replaceAll("%state%", state);
+    }
+
+    public static String getPINFO_PunishReason(String reason) {
+        return PINFO_PunishReason.replaceAll("%reason%", reason);
+    }
+
+    public static String getPINFO_PunishInitiator(String executor) {
+        return PINFO_PunishInitiator.replaceAll("%executor%", executor);
+    }
+
+    public static String getPINFO_PunishTime(String punishTimeString) {
+        return PINFO_PunishTime.replaceAll("%punishTimeString%", punishTimeString);
+    }
+
+    public static String getPINFO_PunishExpire(String expire) {
+        return PINFO_PunishExpire.replaceAll("%expire%", expire);
+    }
+
+    public static String getPINFO_isOnline() {
+        return PINFO_isOnline;
+    }
+
+    public static String getPINFO_isOffline() {
+        return PINFO_isOffline;
+    }
+
+    public static String getPINFO_stateYes() {
+        return PINFO_stateYes;
+    }
+
+    public static String getPINFO_stateNo() {
+        return PINFO_stateNo;
+    }
+
+    public static String getPINFO_timePermanent() {
+        return PINFO_timePermanent;
     }
 
 

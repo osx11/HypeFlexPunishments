@@ -54,8 +54,7 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("warn").setExecutor(new CommandWarn(this));
         getCommand("warnlist").setExecutor(new CommandWarnlist(this));
         getCommand("unwarn").setExecutor(new CommandUnwarn(this));
-
-        //getCommand("test").setExecutor(new CommandTest(this));
+        getCommand("pinfo").setExecutor(new CommandPinfo(this));
 
         this.getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("---------- HF Punishments LOADED SUCCESSFULLY ----------");
@@ -109,12 +108,7 @@ public class Main extends JavaPlugin implements Listener {
                         p.sendMessage(MessagesData.getMSG_AttemptedToJoin(nick));
                     }
                 }
-            }
-        }
-
-        // временный
-        if (User.isBanned(nick)) {
-            if (!punishTimeString.equals("*permanent*")) {
+            } else { // временный
                 final long expire = MySQL.getLong("SELECT expire FROM bans WHERE nick=\"" + nick + "\"", "expire");
                 if (expire > System.currentTimeMillis()) {
                     event.disallow(PlayerLoginEvent.Result.KICK_BANNED, MessagesData.getReason_TempbanReasonFormat(reason, punishTimeString, Millis2Date.convertMillisToDate(expire)));
@@ -153,11 +147,15 @@ public class Main extends JavaPlugin implements Listener {
             String reasonIP = MySQL.getString("SELECT reason FROM mutesIP WHERE IP=\"" + playerIP + "\"", "reason");
             event.setCancelled(true);
             player.sendMessage(MessagesData.getReason_MuteIPReasonFormat(reasonIP));
+            return;
         }
 
-        // временный
+        // перманент
         if (User.isMuted(nick)) {
-            if (!punishTimeString.equals("*permanent*")) {
+            if (punishTimeString.equals("*permanent*")) {
+                event.setCancelled(true);
+                player.sendMessage(MessagesData.getReason_MuteReasonFormat(reason));
+            } else { // временный
                 long expire = MySQL.getLong("SELECT expire FROM mutes WHERE nick=\"" + nick + "\"", "expire");
                 if (expire > System.currentTimeMillis()) {
                     event.setCancelled(true);
@@ -166,14 +164,6 @@ public class Main extends JavaPlugin implements Listener {
                 } else {
                     MySQL.insert("DELETE FROM mutes WHERE nick=\"" + nick + "\"");
                 }
-            }
-        }
-
-        // перманент
-        if (User.isMuted(nick)) {
-            if (punishTimeString.equals("*permanent*")) {
-                event.setCancelled(true);
-                player.sendMessage(MessagesData.getReason_MuteReasonFormat(reason));
             }
         }
     // -----------------------------------------------------------------------------------------------------------------
