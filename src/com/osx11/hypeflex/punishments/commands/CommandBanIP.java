@@ -16,7 +16,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -78,8 +77,6 @@ public class CommandBanIP implements CommandExecutor {
                 return true;
             }
         }
-
-        GregorianCalendar gregorianCalendar = new GregorianCalendar();
 
         String reason = MessagesData.getReason_DefaultReason();
         final Player player = Bukkit.getPlayer(punishableNick);
