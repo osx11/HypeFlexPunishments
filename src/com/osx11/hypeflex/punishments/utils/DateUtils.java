@@ -2,7 +2,8 @@ package com.osx11.hypeflex.punishments.utils;
 
 import com.osx11.hypeflex.punishments.data.MessagesData;
 import com.osx11.hypeflex.punishments.exceptions.InvalidTimeIdentifier;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -105,6 +106,18 @@ public class DateUtils {
         output[1] = message.substring(0, message.length() - 1);
 
         return output;
+    }
+
+    public static String getCurrentDate() {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return simpleDateFormat.format(date);
+    }
+
+    public static String getCurrentTime() {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+        return simpleDateFormat.format(date);
     }
 
 }

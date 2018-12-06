@@ -7,15 +7,13 @@ import com.osx11.hypeflex.punishments.User;
 import com.osx11.hypeflex.punishments.data.ConfigData;
 import com.osx11.hypeflex.punishments.data.MessagesData;
 import com.osx11.hypeflex.punishments.exceptions.InvalidPunishReason;
+import com.osx11.hypeflex.punishments.utils.DateUtils;
 import com.osx11.hypeflex.punishments.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 public class CommandKick implements CommandExecutor {
 
@@ -36,14 +34,12 @@ public class CommandKick implements CommandExecutor {
 
         if (args.length < 1) { return false; }
 
-        GregorianCalendar gregorianCalendar = new GregorianCalendar();
-
         final String punishableNick = args[0];
         String reason = MessagesData.getReason_DefaultReason();
         final Player player = Bukkit.getPlayer(punishableNick);
         final int cooldownConfig = ConfigData.getCoolDownKick();
-        final String date = String.valueOf(gregorianCalendar.get(Calendar.YEAR)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.MONTH)) + "-" + String.valueOf(gregorianCalendar.get(Calendar.DATE));
-        final String time = String.valueOf(gregorianCalendar.get(Calendar.HOUR)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.MINUTE)) + ":" + String.valueOf(gregorianCalendar.get(Calendar.SECOND));
+        final String date = DateUtils.getCurrentDate();
+        final String time = DateUtils.getCurrentTime();
 
         // если игрок оффлайн
         if (!User.isOnline(player)) {

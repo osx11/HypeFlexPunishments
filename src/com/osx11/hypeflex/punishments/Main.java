@@ -1,19 +1,15 @@
 package com.osx11.hypeflex.punishments;
 
-import com.comphenix.protocol.ProtocolLib;
-import com.comphenix.protocol.ProtocolLibrary;
 import com.osx11.hypeflex.punishments.commands.*;
 import com.osx11.hypeflex.punishments.data.ConfigData;
 import com.osx11.hypeflex.punishments.data.MessagesData;
 import com.osx11.hypeflex.punishments.exceptions.PlayerNotFoundInDB;
 import com.osx11.hypeflex.punishments.utils.Millis2Date;
-import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -58,6 +54,8 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("warn").setExecutor(new CommandWarn(this));
         getCommand("warnlist").setExecutor(new CommandWarnlist(this));
         getCommand("unwarn").setExecutor(new CommandUnwarn(this));
+
+        //getCommand("test").setExecutor(new CommandTest(this));
 
         this.getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("---------- HF Punishments LOADED SUCCESSFULLY ----------");
