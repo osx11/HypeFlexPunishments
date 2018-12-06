@@ -77,6 +77,8 @@
 
 /warnlist [player] - show all player's warnings
 
+/pinfo [player] - `hfp.pinfo` - show information about player (like banned or not, muted or not etc)
+
 `hfp.kick.exempt` - protects player from kick
 
 `hfp.ban.offline` - ban player who in offline
