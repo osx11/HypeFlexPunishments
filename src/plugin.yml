@@ -52,6 +52,7 @@ commands:
   warnlist:
     description: 'Shows all warns of player'
     usage: '§cUsage: /warnlist <player>'
+    aliases: [warnlist, warns]
   unwarn:
     description: 'Deletes players warn (delete all players warns if -a flag is specified)'
     usage: '§cUsage: /unwarn [-a] <player> <warn_id>'
