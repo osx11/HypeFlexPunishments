@@ -26,8 +26,8 @@ public class CommandReload implements CommandExecutor {
         }
 
         plugin.reloadConfig();
-        plugin.setConfigData();
-        plugin.setMessagesData();
+        plugin.configData.setConfigData();
+        plugin.messagesData.setMessagesData();
 
         sender.sendMessage(MessagesData.getMSG_ConfigReloaded());
 

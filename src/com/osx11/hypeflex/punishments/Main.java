@@ -63,16 +63,9 @@ public class Main extends JavaPlugin implements Listener {
     public void onDisable() { getLogger().info("---------- HF Punishments SHUTTING DOWN ----------"); }
 
 // ---------------------------------------------------------------------------------------------------------------------
-    private final ConfigData configData = new ConfigData(this);
-    private final MessagesData messagesData = new MessagesData(this);
+    public final ConfigData configData = new ConfigData(this);
+    public final MessagesData messagesData = new MessagesData(this);
 // ---------------------------------------------------------------------------------------------------------------------
-
-    public void setConfigData() {
-        configData.setConfigData();
-    }
-    public void setMessagesData() {
-        messagesData.setMessagesData();
-    }
 
     @EventHandler
     public void onPlayerLogin(final PlayerLoginEvent event) {
