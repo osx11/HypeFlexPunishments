@@ -5,10 +5,6 @@ import com.osx11.hypeflex.punishments.data.MessagesData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.File;
 
 public class CommandReload implements CommandExecutor {
 
@@ -18,14 +14,15 @@ public class CommandReload implements CommandExecutor {
         this.plugin = plugin;
     }
 
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (args.length != 0) { return false; }
 
-        //plugin.reloadConfig();
 
-        File messagesFile = new File(plugin.getDataFolder() + File.separator + "messages" + File.separator + "messages.yml");
-        FileConfiguration messages = YamlConfiguration.loadConfiguration(messagesFile);
+        plugin.reloadConfig();
+        plugin.setConfigData();
+        plugin.setMessagesData();
 
         sender.sendMessage(MessagesData.getMSG_ConfigReloaded());
 

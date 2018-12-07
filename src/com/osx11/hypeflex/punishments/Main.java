@@ -67,6 +67,13 @@ public class Main extends JavaPlugin implements Listener {
     private final MessagesData messagesData = new MessagesData(this);
 // ---------------------------------------------------------------------------------------------------------------------
 
+    public void setConfigData() {
+        configData.setConfigData();
+    }
+    public void setMessagesData() {
+        messagesData.setMessagesData();
+    }
+
     @EventHandler
     public void onPlayerLogin(final PlayerLoginEvent event) {
         // -----------------------------------------------------------------------------------------------------------------

@@ -11,9 +11,9 @@ public class MySQL {
 
     private static Connection connection;
 
-    private static String login = ConfigData.getMySQL_login();
-    private static String password = ConfigData.getMySQL_password();
-    private static String url = ConfigData.getMySQL_url();
+    private static final String login = ConfigData.getMySQL_login();
+    private static final String password = ConfigData.getMySQL_password();
+    private static final String url = ConfigData.getMySQL_url();
 
     private static Connection getConnection() throws SQLException {
 
