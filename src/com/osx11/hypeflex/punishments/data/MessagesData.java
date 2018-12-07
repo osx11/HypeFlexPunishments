@@ -70,6 +70,7 @@ public final class MessagesData {
     private static String PINFO_PunishInitiator;
     private static String PINFO_PunishTime;
     private static String PINFO_PunishExpire;
+    private static String PINFO_WarnsCount;
     private static String PINFO_isOnline;
     private static String PINFO_isOffline;
     private static String PINFO_stateYes;
@@ -142,6 +143,7 @@ public final class MessagesData {
             PINFO_PunishInitiator = messages.getString("PlayerInfo.PunishInitiator").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             PINFO_PunishTime = messages.getString("PlayerInfo.PunishTime").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             PINFO_PunishExpire = messages.getString("PlayerInfo.PunishExpire").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            PINFO_WarnsCount = messages.getString("PlayerInfo.WarnsCount").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             PINFO_isOnline = messages.getString("PlayerInfo.isOnline").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             PINFO_isOffline = messages.getString("PlayerInfo.isOffline").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             PINFO_stateYes = messages.getString("PlayerInfo.stateYes").replaceAll("&", "§").replaceAll("%prefix%", prefix);
@@ -356,6 +358,10 @@ public final class MessagesData {
 
     public static String getPINFO_PunishExpire(String expire) {
         return PINFO_PunishExpire.replaceAll("%expire%", expire);
+    }
+
+    public static String getPINFO_WarnsCount(String warnsCount) {
+        return PINFO_WarnsCount.replaceAll("%warnsCount%", warnsCount);
     }
 
     public static String getPINFO_isOnline() {

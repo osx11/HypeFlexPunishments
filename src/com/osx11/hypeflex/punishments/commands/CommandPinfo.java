@@ -99,6 +99,12 @@ public class CommandPinfo implements CommandExecutor {
         } else {
             sender.sendMessage("  " + MessagesData.getPINFO_isMuted(stateFalse));
         }
+        if (MySQL.stringIsExist("warns", "nick", punishableNick)) {
+            final int warnsCount = MySQL.getInt("SELECT COUNT(nick) FROM warns WHERE nick=\"" + punishableNick + "\"", "COUNT(nick)");
+            sender.sendMessage("  " + MessagesData.getPINFO_WarnsCount(String.valueOf(warnsCount)));
+        } else {
+            sender.sendMessage("  " + MessagesData.getPINFO_WarnsCount(stateFalse));
+        }
 
         return true;
     }

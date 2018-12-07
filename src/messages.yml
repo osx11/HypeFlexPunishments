@@ -54,6 +54,7 @@ PlayerInfo:
   PunishInitiator: '&fИнициатор: &c%executor%'
   PunishTime: '&fВремя наказания: &c%punishTimeString%'
   PunishExpire: '&fИстекает: &c%expire%'
+  WarnsCount: '&fКоличество предупреждений: &c%warnsCount%'
   isOnline: '&7[&aОнлайн&7]'
   isOffline: '&7[&cОффлайн&7]'
   stateYes: '&cда'
