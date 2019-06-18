@@ -1,4 +1,6 @@
 #### This plugin allows you to ban, tempban, mute and warn players.
+#### This plugin has full UUID support so you can easily use it in offline server mode. (plugin stores players' UUIDs in database)
+#### Moreover this plugin has many features that standart minecraft or Essentials plugin don't have.
 ###### Spigot version: 1.10.2
 ###### Bungee version: _(doesn't supported yet)_
 ## Features:
@@ -6,7 +8,7 @@
 * MySQL database support
 * All your punishments, that you've issued on the one server, will take effect on all others servers connected to the same database _(will be redesigned in near future by adding bungeecord support)_
 * Players cannot override the existing punishment without permission `hfp.[command].override`
-* Silent punishments with `-s` flag _(in development)_
+* Flags for commands such as '-s' (silent execute) or '-f' (force execute)
 * Support offline mode
 * Web interface _(in development)_*
 
@@ -23,10 +25,10 @@
         delete_all_warnings_after_last_warn: true
         on_warn_count:
           2:
-            command: 'kick'
+            command: 'kick %player% for count of warns: %warnsCount%"'
             if_player_is_online: true
           3:
-            command: 'ban'
+            command: 'ban %player% for count of warns: %warnsCount%"'
             if_player_is_online: false
 
       cooldowns:
@@ -48,55 +50,103 @@
 ## Commands & Permissions:
 ###### []: required, (): optional
 ###### `-f` - force command execute (plugin won't check if player is online)
+###### `-s` - silent command execute (plugin won't broadcast the message)
 
 /hfp - `hfp.reload` - reload config and messages.yml
 
-/kick [player] (reason) - `hfp.kick` - kick player
 
-/ban (-f) [player] (reason) - `hfp.ban` - ban player for permanent
+### Kicks
 
-/banip (-f) [ip/player] [reason] - `hfp.banip` - ban player's IP for permanent
+/kick (-s) (-f) [player] (reason) - `hfp.kick` - kick player
+`hfp.kick.force` - use `-f` flag
+`hfp.kick.silent` - use `-s` flag
+`hfp.kick.exempt` - immunity to this type of punishment
+`hfp.kick.notify` - notify all online players when player has been punished
 
-/tempban (-f) [player] [time] (reason) - `hfp.tempban` - ban player for a specified time _(see **time settings**)_
+
+### Bans
+
+/ban (-f) (-s) [player] (reason) - `hfp.ban` - ban player for permanent
+/tempban (-f) (-s) [player] [time] (reason) - `hfp.tempban` - ban player for a specified time
+`hfp.ban.force` - use `-f` flag
+`hfp.ban.silent` - use `-s` flag
+`hfp.ban.exempt` - immunity to this type of punishment
+`hfp.ban.notify` - notify all online players when player has been punished
+`hfp.ban.override` - override the existing ban
+`hfp.ban.offline` - ban player in offline
+
+/banip (-f) (-s) [ip/player] [reason] - `hfp.banip` - ban player's IP for permanent
+`hfp.banip.force` - use `-f` flag
+`hfp.banip.silent` - use `-s` flag
+`hfp.banip.exempt` - immunity to this type of punishment
+`hfp.banip.notify` - notify all online players when player has been punished
+`hfp.banip.override` - override the existing ban
 
 /banlist - `hfp.banlist` - show all banned players
-
 /banlistip - `hfp.banlist` - show all banned player's IPs
 
-/unban [player] - `hfp.unban` - delete player's ban
+/unban (-s) [player] - `hfp.unban` - delete player's ban
+`hfp.unban.silent` - use `-s` flag
+`hfp.unban.notify` - notify all online players when player has been unbanned
 
-/mute (-f) [player] (reason) - `hfp.mute` - mute player for permanent
+/unbanip (-s) [ip/player] - `hfp.unbanip` - unbans player's ip address
+`hfp.unban.silent` - use `-s` flag
+`hfp.unban.notify` - notify all online players when player has been unbanned
 
-/tempmute (-f) [player] [time] (reason) - `hfp.tempmute` - mute player for a specified time _(see **time settings**)_
 
-/unmute [player] - `hfp.unmute` - delete player's mute
+### Mutes
 
-/warn (-f) [player] (reason) - `hfp.warn` - warn a player
+/mute (-f) (-s) [player] (reason) - `hfp.mute` - mute player for permanent
+`hfp.mute.force` - use `-f` flag
+`hfp.mute.silent` - use `-s` flag
+`hfp.mute.exempt` - immunity to this type of punishment
+`hfp.mute.notify` - notify all online players when player has been punished
+`hfp.mute.override` - override the existing mute
+`hfp.mute.offline` - mute player in offline
 
-/unwarn (-a) [player] [warn id] - `hfp.unwarn` - delete player's warn whose ID is specified _(or delete all player's warnings if `-a` flag is specified)_
+/tempmute (-f) (-s) [player] [time] (reason) - `hfp.tempmute` - mute player for a specified time
+`hfp.mute.force` - use `-f` flag
+`hfp.mute.silent` - use `-s` flag
+`hfp.mute.exempt` - immunity to this type of punishment
+`hfp.mute.notify` - notify all online players when player has been punished
+`hfp.mute.override` - override the existing mute
+`hfp.mute.offline` - mute player in offline
 
-/warnlist [player] - show all player's warnings
+/muteip (-f) (-s) [ip/player] [reason] - `hfp.muteip` - mute player's IP for permanent
+`hfp.muteip.force` - use `-f` flag
+`hfp.muteip.silent` - use `-s` flag
+`hfp.muteip.exempt` - immunity to this type of punishment
+`hfp.muteip.notify` - notify all online players when player has been punished
+`hfp.muteip.override` - override the existing mute
+
+/unmute (-s) [player] - `hfp.unmute` - delete player's ban
+`hfp.unmute.silent` - use `-s` flag
+`hfp.unmute.notify` - notify all online players when player has been unmuted
+
+/unmuteip (-s) [ip/player] - `hfp.unmuteip` - unmute player's ip address
+`hfp.unmuteip.silent` - use `-s` flag
+`hfp.unmuteip.notify` - notify all online players when player has been unmuted
+
+### Warnings
+
+/warn (-f) (-s) [player] (reason) - `hfp.warn` - warn a player
+`hfp.warn.force` - use `-f` flag
+`hfp.warn.silent` - use `-s` flag
+`hfp.warn.exempt` - immunity to this type of punishment
+`hfp.warn.notify` - notify all online players when player has been warned
+`hfp.warn.offline` - warn player in offline
+
+/unwarn (-s) [player] [warn id] - `hfp.unwarn` - delete player's warn with specified id
+/unwarn (-a) (-s) [player] - `hfp.unwarn` - delete all player's warnings
+`hfp.unwarn.silent` - use `-s` flag
+`hfp.unwarn.all` - use `-a` flag
+
+/warnlist [player] `hfp.warnlist` - show all player's warnings with it's id
+
+
+### Common
 
 /pinfo [player] - `hfp.pinfo` - show information about player (like banned or not, muted or not etc)
-
-`hfp.kick.exempt` - protects player from kick
-
-`hfp.ban.offline` - ban player who in offline
-
-`hfp.ban.override` - override an existing ban
-
-`hfp.ban.force` - allows to use `-f` flag
-
-`hfp.ban.exempt` - protects player from ban
-
-`hfp.mute.offline` - mute player who in offline
-
-`hfp.mute.override` - override an existing mute
-
-`hfp.mute.force` - allows to use `-f` flag
-
-`hfp.ban.exempt` - protects player from kick
-
 `hfp.[command].cooldownBypass` - allows player bypass command cooldown
+`hfp.notifyDeniedJoin` - notifies all players with this permission when player is banned and he's trying to join the server
 
-`hfp.notifyDeniedJoin` - notifies all players with this permission, when player is banned and he's trying to join the server

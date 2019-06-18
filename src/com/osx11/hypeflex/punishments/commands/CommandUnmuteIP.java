@@ -1,30 +1,22 @@
 package com.osx11.hypeflex.punishments.commands;
 
-import com.osx11.hypeflex.punishments.Logging;
-import com.osx11.hypeflex.punishments.Main;
-import com.osx11.hypeflex.punishments.MySQL;
-import com.osx11.hypeflex.punishments.User;
+import com.osx11.hypeflex.punishments.*;
 import com.osx11.hypeflex.punishments.data.MessagesData;
 import com.osx11.hypeflex.punishments.exceptions.PlayerNotFoundInDB;
+import com.osx11.hypeflex.punishments.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.bukkit.entity.Player;
 
 public class CommandUnmuteIP implements CommandExecutor {
 
-    private Main plugin;
-
-    public CommandUnmuteIP(Main plugin) {
-        this.plugin = plugin;
-    }
+    public CommandUnmuteIP() { }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (!User.hasPermission(sender, "hfp.unbanip")) {
+        if (!sender.hasPermission("hfp.unmuteip")) {
             sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
             return true;
         }
@@ -33,42 +25,46 @@ public class CommandUnmuteIP implements CommandExecutor {
             return false;
         }
 
-        boolean found = false;
-        final String punishableNick = args[0];
-        String punishableIP = "";
+        boolean silent = Utils.flagSilent(args);
+        args = Utils.removeFlags(args);
 
-        final Pattern IPPattern = Pattern.compile("((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))");
-        final Matcher matcher = IPPattern.matcher(punishableNick);
-        while (matcher.find()) {
-            if (matcher.group(1) != null) {
-                punishableIP = matcher.group(1);
-                found = true;
-            }
+        if (silent && !sender.hasPermission("hfp.unmuteip.silent")) {
+            sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
+            return true;
         }
 
-        if (!found) {
+        String user_ip;
+
+        if (Utils.isiP(args[0])) {
+            user_ip = args[0];
+        } else {
             try {
-                punishableIP = User.getIP(punishableNick);
+                user_ip = new User(args[0]).getIP();
             } catch (PlayerNotFoundInDB e) {
                 sender.sendMessage(e.getMessage());
                 return true;
             }
         }
 
-        // проверяем, что игрок забанен
-        if (!User.isMutedIP(punishableIP)) {
-            sender.sendMessage(MessagesData.getMSG_IPNotFound(punishableIP));
+        // проверяем активно ли кд
+        if (sender instanceof Player && new User(sender.getName()).updateCooldown("unmuteip")) {
             return true;
         }
 
-        // удаляем из бд
-        MySQL.insert("DELETE FROM mutesIP WHERE IP=\"" + punishableIP + "\"");
+        IPAddr ipAddr = new IPAddr(user_ip);
 
-        // логируем
-        Logging.INFO(MessagesData.getLogging_UnmuteIPLog(sender.getName(), punishableIP));
+        if (!ipAddr.isMuted()) {
+            sender.sendMessage(MessagesData.getMSG_IPNotFound(user_ip));
+            return true;
+        }
 
-        // бродкастим
-        Bukkit.broadcast(MessagesData.getLogging_UnmuteIPLog(sender.getName(), punishableIP), "hfp.unmuteip.notify");
+        ipAddr.unmute();
+
+        Logging.INFO(MessagesData.getLogging_UnmuteIPLog(sender.getName(), user_ip));
+
+        if (!silent) {
+            Bukkit.broadcast(MessagesData.getLogging_UnmuteIPLog(sender.getName(), user_ip), "hfp.unmuteip.notify");
+        }
 
         return true;
     }

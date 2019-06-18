@@ -5,6 +5,7 @@ import com.osx11.hypeflex.punishments.Main;
 import com.osx11.hypeflex.punishments.MySQL;
 import com.osx11.hypeflex.punishments.User;
 import com.osx11.hypeflex.punishments.data.MessagesData;
+import com.osx11.hypeflex.punishments.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,76 +13,66 @@ import org.bukkit.command.CommandSender;
 
 public class CommandUnwarn implements CommandExecutor {
 
-    private Main plugin;
-
-    public CommandUnwarn(Main plugin) {
-        this.plugin = plugin;
-    }
+    public CommandUnwarn() { }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (!User.hasPermission(sender, "hfp.unwarn")) {
+        if (!sender.hasPermission("hfp.unwarn")) {
             sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
             return true;
         }
 
         if (args.length < 1) { return false; }
 
-        boolean allSpecified = false;
-        if (args[0].equalsIgnoreCase("-a")) {
-            if (User.hasPermission(sender, "hfp.unwarn.all")) {
-                allSpecified = true;
-            } else {
-                sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
-                return true;
-            }
+        boolean all = Utils.flagAll(args);
+        boolean silent = Utils.flagSilent(args);
+        args = Utils.removeFlags(args);
+
+        if ((all && !sender.hasPermission("hfp.unwarn.all")) || (silent && !sender.hasPermission("hfp.unwarn.silent"))) {
+            sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
+            return true;
         }
 
-        String punishableNick = args[0];
-        if (allSpecified) {
-            punishableNick = args[1];
-        }
+        String user_nick = args[0];
 
+        User user = new User(user_nick);
+        String user_uuid = user.getUUID();
 
-        if (!allSpecified) {
-            if (args.length == 1) {
-                sender.sendMessage("here is warnlist for " + punishableNick);
-                for (int i = 0; i < MySQL.getWarnlist(punishableNick).length; i++) {
-                    sender.sendMessage(MySQL.getWarnlist(punishableNick)[i]);
-                }
-                return true;
+        if (!all && args.length == 1) {
+            for (String warn : MySQL.getWarnlist(user_uuid)) {
+                sender.sendMessage(warn);
             }
+            return true;
         }
 
         String warnID = null;
-        if (!allSpecified) {
+        if (!all) {
             warnID = args[1];
         }
 
-        if (!MySQL.stringIsExist("warns", "nick", punishableNick)) {
+        if (!user.hasActiveWarns()) {
             sender.sendMessage(MessagesData.getMSG_NoActiveWarns());
             return true;
         }
 
-        if (!allSpecified) {
-            if (MySQL.getString("SELECT warnID FROM warns WHERE nick=\"" + punishableNick + "\" AND warnID=\"" + warnID + "\"", "warnID") == null) {
-                sender.sendMessage(MessagesData.getMSG_WarnIDNotFound());
-                for (int i = 0; i < MySQL.getWarnlist(punishableNick).length; i++) {
-                    sender.sendMessage(MySQL.getWarnlist(punishableNick)[i]);
-                }
-                return true;
+        if (!all && !user.hasWarn(warnID)) {
+            for (String warn : MySQL.getWarnlist(user_uuid)) {
+                sender.sendMessage(warn);
             }
+            return true;
         }
 
-        if (allSpecified) {
-            MySQL.insert("DELETE FROM warns WHERE nick=\"" + punishableNick + "\"");
+        if (all) {
+            user.removeAllWarns();
         } else {
-            MySQL.insert("DELETE FROM warns WHERE nick=\"" + punishableNick + "\" AND warnID=\"" + warnID + "\"");
+            user.removeWarn(warnID);
         }
 
-        Logging.INFO(MessagesData.getLogging_UnwarnLog(sender.getName(), punishableNick));
+        Logging.INFO(MessagesData.getLogging_UnwarnLog(sender.getName(), user_nick));
 
-        Bukkit.broadcast(MessagesData.getLogging_UnwarnLog(sender.getName(), punishableNick), "hfp.unwarn.notify");
+        if (!silent) {
+            Bukkit.broadcast(MessagesData.getLogging_UnwarnLog(sender.getName(), user_nick), "hfp.unwarn.notify");
+        }
 
         return true;
     }

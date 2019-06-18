@@ -8,7 +8,7 @@ public class Logging {
 
     public static void INFO(final String log) { Bukkit.getLogger().log(Level.INFO, log); }
 
-    public static void WARNING(final String log) {
+    static void WARNING(final String log) {
         Bukkit.getLogger().log(Level.WARNING, log);
     }
 
