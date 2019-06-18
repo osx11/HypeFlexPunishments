@@ -58,95 +58,161 @@
 ### Kicks
 
 /kick (-s) (-f) [player] (reason) - `hfp.kick` - kick player
+
 `hfp.kick.force` - use `-f` flag
+
 `hfp.kick.silent` - use `-s` flag
+
 `hfp.kick.exempt` - immunity to this type of punishment
+
 `hfp.kick.notify` - notify all online players when player has been punished
+
 
 
 ### Bans
 
 /ban (-f) (-s) [player] (reason) - `hfp.ban` - ban player for permanent
+
 /tempban (-f) (-s) [player] [time] (reason) - `hfp.tempban` - ban player for a specified time
+
 `hfp.ban.force` - use `-f` flag
+
 `hfp.ban.silent` - use `-s` flag
+
 `hfp.ban.exempt` - immunity to this type of punishment
+
 `hfp.ban.notify` - notify all online players when player has been punished
+
 `hfp.ban.override` - override the existing ban
+
 `hfp.ban.offline` - ban player in offline
+
 
 /banip (-f) (-s) [ip/player] [reason] - `hfp.banip` - ban player's IP for permanent
 `hfp.banip.force` - use `-f` flag
+
 `hfp.banip.silent` - use `-s` flag
+
 `hfp.banip.exempt` - immunity to this type of punishment
+
 `hfp.banip.notify` - notify all online players when player has been punished
+
 `hfp.banip.override` - override the existing ban
 
+
 /banlist - `hfp.banlist` - show all banned players
+
 /banlistip - `hfp.banlist` - show all banned player's IPs
 
+
 /unban (-s) [player] - `hfp.unban` - delete player's ban
+
 `hfp.unban.silent` - use `-s` flag
+
 `hfp.unban.notify` - notify all online players when player has been unbanned
 
 /unbanip (-s) [ip/player] - `hfp.unbanip` - unbans player's ip address
+
 `hfp.unban.silent` - use `-s` flag
+
 `hfp.unban.notify` - notify all online players when player has been unbanned
+
 
 
 ### Mutes
 
 /mute (-f) (-s) [player] (reason) - `hfp.mute` - mute player for permanent
+
 `hfp.mute.force` - use `-f` flag
+
 `hfp.mute.silent` - use `-s` flag
+
 `hfp.mute.exempt` - immunity to this type of punishment
+
 `hfp.mute.notify` - notify all online players when player has been punished
+
 `hfp.mute.override` - override the existing mute
+
 `hfp.mute.offline` - mute player in offline
+
 
 /tempmute (-f) (-s) [player] [time] (reason) - `hfp.tempmute` - mute player for a specified time
+
 `hfp.mute.force` - use `-f` flag
+
 `hfp.mute.silent` - use `-s` flag
+
 `hfp.mute.exempt` - immunity to this type of punishment
+
 `hfp.mute.notify` - notify all online players when player has been punished
+
 `hfp.mute.override` - override the existing mute
+
 `hfp.mute.offline` - mute player in offline
 
+
 /muteip (-f) (-s) [ip/player] [reason] - `hfp.muteip` - mute player's IP for permanent
+
 `hfp.muteip.force` - use `-f` flag
+
 `hfp.muteip.silent` - use `-s` flag
+
 `hfp.muteip.exempt` - immunity to this type of punishment
+
 `hfp.muteip.notify` - notify all online players when player has been punished
+
 `hfp.muteip.override` - override the existing mute
 
+
+
 /unmute (-s) [player] - `hfp.unmute` - delete player's ban
+
 `hfp.unmute.silent` - use `-s` flag
+
 `hfp.unmute.notify` - notify all online players when player has been unmuted
 
+
 /unmuteip (-s) [ip/player] - `hfp.unmuteip` - unmute player's ip address
+
 `hfp.unmuteip.silent` - use `-s` flag
+
 `hfp.unmuteip.notify` - notify all online players when player has been unmuted
+
 
 ### Warnings
 
 /warn (-f) (-s) [player] (reason) - `hfp.warn` - warn a player
+
 `hfp.warn.force` - use `-f` flag
+
 `hfp.warn.silent` - use `-s` flag
+
 `hfp.warn.exempt` - immunity to this type of punishment
+
 `hfp.warn.notify` - notify all online players when player has been warned
+
 `hfp.warn.offline` - warn player in offline
 
+
 /unwarn (-s) [player] [warn id] - `hfp.unwarn` - delete player's warn with specified id
+
 /unwarn (-a) (-s) [player] - `hfp.unwarn` - delete all player's warnings
+
 `hfp.unwarn.silent` - use `-s` flag
+
 `hfp.unwarn.all` - use `-a` flag
 
+
 /warnlist [player] `hfp.warnlist` - show all player's warnings with it's id
+
 
 
 ### Common
 
 /pinfo [player] - `hfp.pinfo` - show information about player (like banned or not, muted or not etc)
+
 `hfp.[command].cooldownBypass` - allows player bypass command cooldown
+
 `hfp.notifyDeniedJoin` - notifies all players with this permission when player is banned and he's trying to join the server
+
 
