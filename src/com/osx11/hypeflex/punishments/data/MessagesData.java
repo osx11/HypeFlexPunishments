@@ -35,6 +35,8 @@ public final class MessagesData {
     private static String MSG_NoActiveWarns;
     private static String MSG_WarnIDNotFound;
     private static String MSG_AttemptedToJoin;
+    private static String MSG_BanlistFormat;
+    private static String MSG_WarnlistFormat;
 
     private static String Reason_KickReasonFormat;
     private static String Reason_BanReasonFormat;
@@ -108,6 +110,8 @@ public final class MessagesData {
             MSG_NoActiveWarns = messages.getString("NoActiveWarns").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             MSG_WarnIDNotFound = messages.getString("WarnIDNotFound").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             MSG_AttemptedToJoin = messages.getString("AttemptedToJoin").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            MSG_BanlistFormat = messages.getString("BanlistFormat").replaceAll("&", "§").replaceAll("%prefix%", prefix);
+            MSG_WarnlistFormat = messages.getString("WarnlistFormat").replaceAll("&", "§").replaceAll("%prefix%", prefix);
 
             Reason_KickReasonFormat = messages.getString("PunishReasons.KickReasonFormat").replaceAll("&", "§").replaceAll("%prefix%", prefix);
             Reason_BanReasonFormat = messages.getString("PunishReasons.BanReasonFormat").replaceAll("&", "§").replaceAll("%prefix%", prefix);
@@ -175,11 +179,11 @@ public final class MessagesData {
         return MSG_MySQL_ConnectionError;
     }
 
-    public static String getMSG_PlayerIsOffline() {
-        return MSG_PlayerIsOffline;
+    public static String getMSG_PlayerIsOffline(final String player) {
+        return MSG_PlayerIsOffline.replaceAll("%player%", player);
     }
 
-    public static String getMSG_PlayerNotFound(String player) {
+    public static String getMSG_PlayerNotFound(final String player) {
         return MSG_PlayerNotFound.replaceAll("%player%", player);
     }
 
@@ -225,6 +229,14 @@ public final class MessagesData {
 
     public static String getMSG_AttemptedToJoin(final String player) {
         return MSG_AttemptedToJoin.replaceAll("%player%", player);
+    }
+
+    public static String getMSG_BanlistFormat(final String date, final String time, final String player, final String reason) {
+        return MSG_BanlistFormat.replaceAll("%date%", date).replaceAll("%time%", time).replaceAll("%player%", player).replaceAll("%reason%", reason);
+    }
+
+    public static String getMSG_WarnlistFormat(final String date, final String time, final String id, final String reason) {
+        return MSG_WarnlistFormat.replaceAll("%date%", date).replaceAll("%time%", time).replaceAll("%id%", id).replaceAll("%reason%", reason);
     }
 
 

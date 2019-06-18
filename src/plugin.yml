@@ -1,61 +1,61 @@
-# §
 name: HypeFlexPunishments
 version: 1.0
 main: com.osx11.hypeflex.punishments.Main
+depend: [Vault]
 commands:
   HFPunishments:
     description: 'Reloads plugin'
-    usage: '§cUsage: /hfp'
+    usage: '§c/hfp'
     aliases: [HFPunishments, hfp]
   kick:
     description: 'Kicks player'
-    usage: '§cUsage: /kick <player> [reason]'
+    usage: '§c/kick [-s] <player> [reason]'
   ban:
     description: 'Bans player'
-    usage: '§cUsage: /ban [-f] <player> [reason]'
+    usage: '§c/ban [-f] [-s] <player> [reason]'
   banip:
     description: 'Bans player IP address'
-    usage: '§cUsage: /banip [-f] <player> [reason] OR /banip <IP> [reason]'
+    usage: '§c/banip [-f] [-s] <player> [reason] OR /banip <IP> [reason]'
   tempban:
     description: 'Bans player for specified time'
-    usage: '§cUsage: /tempban [-f] <player> <time> [reason]'
+    usage: '§c/tempban [-f] [-s] <player> <time> [reason]'
   unban:
     description: 'Unbans player'
-    usage: '§cUsage: /unban <player>'
+    usage: '§c/unban [-s] <player>'
   unbanip:
     description: 'Unbans player IP address'
-    usage: '§cUsage: /unbanip <ip (or player)>'
+    usage: '§c/unbanip [-s] <ip (or player)>'
   banlist:
     description: 'Shows banned players'
-    usage: '§cUsage: /banlist'
+    usage: '§c/banlist'
   banlistip:
     description: 'Shows banned players IP'
-    usage: '§cUsage: /banlistip'
+    usage: '§c/banlistip'
   mute:
     description: 'Blocks players chat'
-    usage: '§cUsage: /mute [-f] <player> [reason]'
+    usage: '§c/mute [-f] [-s] <player> [reason]'
   muteip:
     description: 'Blocks players ip chat'
-    usage: '§cUsage: /muteip [-f] <player> [reason]'
+    usage: '§c/muteip [-f] [-s] <player> [reason]'
   tempmute:
     description: 'Blocks players chat for specified time'
-    usage: '§cUsage: /tempmute [-f] <player> <time> [reason]'
+    usage: '§c/tempmute [-f] [-s] <player> <time> [reason]'
   unmute:
     description: 'Unmutes player'
-    usage: '§cUsage: /unmute <player>'
+    usage: '§c/unmute [-s] <player>'
   unmuteip:
     description: 'Unmutes players ip'
-    usage: '§cUsage: /unmute <ip (or player)>'
+    usage: '§c/unmute [-s] <ip (or player)>'
   warn:
     description: 'Warn player'
-    usage: '§cUsage: /warn [-f] <player> <reason>'
+    usage: '§c/warn [-f] [-s] <player> <reason>'
   warnlist:
     description: 'Shows all warns of player'
-    usage: '§cUsage: /warnlist <player>'
+    usage: '§c/warnlist <player>'
     aliases: [warnlist, warns]
   unwarn:
     description: 'Deletes players warn (delete all players warns if -a flag is specified)'
-    usage: '§cUsage: /unwarn [-a] <player> <warn_id>'
+    usage: '§c/unwarn [-a] <player> <warn_id>'
   pinfo:
     description: 'Shows information about player'
-    usage: '§Usage: /pinfo <player>'
+    usage: '§c/pinfo <player>'

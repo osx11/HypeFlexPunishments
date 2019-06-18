@@ -1,14 +1,12 @@
 package com.osx11.hypeflex.punishments.commands;
 
 import com.osx11.hypeflex.punishments.Logging;
-import com.osx11.hypeflex.punishments.Main;
-import com.osx11.hypeflex.punishments.MySQL;
 import com.osx11.hypeflex.punishments.User;
-import com.osx11.hypeflex.punishments.data.ConfigData;
 import com.osx11.hypeflex.punishments.data.MessagesData;
 import com.osx11.hypeflex.punishments.exceptions.InvalidPunishReason;
 import com.osx11.hypeflex.punishments.exceptions.InvalidTimeIdentifier;
 import com.osx11.hypeflex.punishments.utils.DateUtils;
+import com.osx11.hypeflex.punishments.utils.Millis2Date;
 import com.osx11.hypeflex.punishments.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -16,92 +14,63 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Objects;
+import java.util.Arrays;
 
 public class CommandTempmute implements CommandExecutor {
 
-    private Main plugin;
-
-    public CommandTempmute(Main plugin) {
-        this.plugin = plugin;
-    }
-
-    private CoolDown coolDown = new CoolDown();
+    public CommandTempmute() { }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (!User.hasPermission(sender, "hfp.tempmute")) {
+        if (!sender.hasPermission("hfp.tempmute")) {
             sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
             return true;
         }
 
-        if (args.length < 1) { return false; }
+        if (args.length < 2) { return false; }
 
-        boolean forceSpecified = false;
-        if (args[0].equalsIgnoreCase("-f")) {
-            if (User.hasPermission(sender, "hfp.mute.force")) {
-                forceSpecified = true;
-            } else {
-                sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
-            }
+        boolean force = Utils.flagForce(args);
+        boolean silent = Utils.flagSilent(args);
+        args = Utils.removeFlags(args);
+
+        if ((force && !sender.hasPermission("hfp.mute.force")) || (silent && !sender.hasPermission("hfp.mute.silent"))) {
+            sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
+            return true;
         }
 
-        String punishableNick;
-        String punishTime;
+        String user_nick = args[0];
+        String punishTime = args[1];
 
-        if (forceSpecified) {
-            if (args.length < 3) { return false; }
-            punishableNick = args[1];
-            punishTime = args[2];
-        } else {
-            if (args.length < 2) {return false; }
-            punishableNick = args[0];
-            punishTime = args[1];
-        }
-
-        String reason = MessagesData.getReason_DefaultReason();
-        final Player player = Bukkit.getPlayer(punishableNick);
-        final String UUID = MySQL.getString("SELECT UUID FROM players WHERE nick=\"" + punishableNick + "\"", "UUID");
-        final int cooldownConfig = ConfigData.getCoolDownTempmute();
-        final String date = DateUtils.getCurrentDate();
-        final String time = DateUtils.getCurrentTime();
+        User user = new User(user_nick);
 
         // если игрок не найден
-        if (!User.isOnline(player)) {
-            if (!User.hasPermission(sender, "hfp.ban.offline")) {
-                sender.sendMessage(MessagesData.getMSG_PlayerIsOffline().replaceAll("%player%", punishableNick));
+        if (!user.isOnline()) {
+            if (!sender.hasPermission("hfp.mute.offline")) {
+                sender.sendMessage(MessagesData.getMSG_PlayerIsOffline(user_nick));
                 return true;
             }
-            if (!forceSpecified) {
-                if (UUID == null) { // если игрока нет вообще (по uuid в таблице)
-                    sender.sendMessage(MessagesData.getMSG_PlayerNotFound(punishableNick));
-                    return true;
-                }
+            if (user.getUUID() == null) { // если не форс и игрока нет вообще (по uuid в таблице)
+                sender.sendMessage(MessagesData.getMSG_PlayerNotFound(user_nick));
+                return true;
             }
         }
 
         // если у человека иммунитет
-        if (User.hasPermission(punishableNick, "hfp.mute.exempt") && sender instanceof Player) {
-            sender.sendMessage(MessagesData.getMSG_Exempt(punishableNick));
+        if (user.hasExempt("mute") && sender instanceof Player && !force) {
+            sender.sendMessage(MessagesData.getMSG_Exempt(user_nick));
             return true;
         }
 
         // проверяем активно ли кд
-        if (sender instanceof Player) {
-            if (coolDown.hasCoolDown(Bukkit.getPlayer(sender.getName()), "tempmute", cooldownConfig))
-                return true;
+        if (sender instanceof Player && new User(sender.getName()).updateCooldown("tempmute")) {
+            return true;
         }
 
         // пишем причину
+        String reason = MessagesData.getReason_DefaultReason();
         try {
-            if (forceSpecified) {
-                if (args.length > 3) {
-                    reason = Utils.GetFullReason(args, 3);
-                }
-            } else {
-                if (args.length > 2) {
-                    reason = Utils.GetFullReason(args, 2);
-                }
+            if (args.length > 2) {
+                reason = Utils.GetFullReason(args, 2);
             }
         } catch (InvalidPunishReason e) {
             sender.sendMessage(e.getMessage());
@@ -120,34 +89,32 @@ public class CommandTempmute implements CommandExecutor {
             return true;
         }
 
+        if (user.isMuted() && !sender.hasPermission("hfp.mute.override")) {
+            sender.sendMessage(MessagesData.getMSG_CannotOverride());
+            return true;
+        }
+
         punishTimeSeconds = Long.parseLong(punishInfo[0]);
         punishTimeString = punishInfo[1];
 
-        String expire = Objects.toString(((((System.currentTimeMillis() + (punishTimeSeconds * 1000)) - System.currentTimeMillis()) / 1000L) / 60), null);
+        String expire = Millis2Date.convertMillisToDate((System.currentTimeMillis() + (punishTimeSeconds * 1000)));
 
         // отправляем сообщение
-        if (User.isOnline(player)) {
-            player.sendMessage(MessagesData.getReason_TempmuteReasonFormat(reason, punishTimeString, expire));
+        if (user.isOnline()) {
+            user.sendMessage(MessagesData.getReason_TempmuteReasonFormat(reason, punishTimeString, expire));
         }
 
         // добавляем в бд
 
-        if (User.isMuted(punishableNick)) {
-            if (User.hasPermission(sender, "hfp.ban.override")) {
-                MySQL.insert("UPDATE mutes SET punishTimeString=\"" + punishTimeString + "\", punishTimeSeconds=\"" + punishTimeSeconds + "\", expire=\"" + (System.currentTimeMillis() + (punishTimeSeconds * 1000)) + "\", reason=\"" + reason + "\", issuedDate=\"" + date + "\", issuedTime=\"" + time + "\", issuedBy=\"" + sender.getName() + "\" WHERE nick=\"" + punishableNick + "\"");
-            } else {
-                sender.sendMessage(MessagesData.getMSG_CannotOverride());
-                return true;
-            }
-        } else {
-            MySQL.insert("INSERT INTO mutes SET nick=\"" + punishableNick + "\", punishTimeString=\"" + punishTimeString + "\", punishTimeSeconds=\"" + punishTimeSeconds + "\", expire=\"" + (System.currentTimeMillis() + (punishTimeSeconds * 1000)) + "\", reason=\"" + reason + "\", issuedDate=\"" + date + "\", issuedTime=\"" + time + "\", issuedBy=\"" + sender.getName() + "\"");
-        }
+        user.mute(reason, sender.getName(), punishTimeString, punishTimeSeconds);
 
         // логируем
-        Logging.INFO(MessagesData.getLogging_TempmuteLog(sender.getName(), punishableNick, punishTimeString, reason));
+        Logging.INFO(MessagesData.getLogging_TempmuteLog(sender.getName(), user_nick, punishTimeString, reason));
 
         // бродкастим
-        Bukkit.broadcast(MessagesData.getLogging_TempmuteLog(sender.getName(), punishableNick, punishTimeString, reason), "hfp.tempmute.notify");
+        if (!silent) {
+            Bukkit.broadcast(MessagesData.getLogging_TempmuteLog(sender.getName(), user_nick, punishTimeString, reason), "hfp.mute.notify");
+        }
 
         return true;
     }

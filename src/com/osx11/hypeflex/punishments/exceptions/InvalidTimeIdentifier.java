@@ -4,7 +4,7 @@ import com.osx11.hypeflex.punishments.data.MessagesData;
 
 public class InvalidTimeIdentifier extends Exception {
 
-    public InvalidTimeIdentifier(String value) {
+    public InvalidTimeIdentifier(final String value) {
         super(MessagesData.getMSG_InvalidTimeIndentifier(value));
     }
 

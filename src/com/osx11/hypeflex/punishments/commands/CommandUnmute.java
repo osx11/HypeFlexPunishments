@@ -1,50 +1,63 @@
 package com.osx11.hypeflex.punishments.commands;
 
 import com.osx11.hypeflex.punishments.Logging;
-import com.osx11.hypeflex.punishments.Main;
-import com.osx11.hypeflex.punishments.MySQL;
 import com.osx11.hypeflex.punishments.User;
 import com.osx11.hypeflex.punishments.data.MessagesData;
+import com.osx11.hypeflex.punishments.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Arrays;
 
 public class CommandUnmute implements CommandExecutor {
 
-    private Main plugin;
-
-    public CommandUnmute(Main plugin) {
-        this.plugin = plugin;
-    }
+    public CommandUnmute() {}
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (!User.hasPermission(sender, "hfp.unmute")) {
+        if (!sender.hasPermission("hfp.unmute")) {
             sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
             return true;
         }
 
-        if (args.length != 1) {
-            return false;
+        boolean silent = Utils.flagSilent(args);
+        args = Utils.removeFlags(args);
+
+        if (silent && !sender.hasPermission("hfp.unmute.silent")) {
+            sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
+            return true;
         }
 
-        final String punishableNick = args[0];
+        if (args.length != 1) { return false; }
+
+        // проверяем активно ли кд
+        if (sender instanceof Player && new User(sender.getName()).updateCooldown("unmute")) {
+            return true;
+        }
+
+        String user_nick = args[0];
+
+        User user = new User(user_nick);
 
         // проверяем, что игрок замучен
-        if (!User.isMuted(punishableNick)) {
-            sender.sendMessage(MessagesData.getMSG_PlayerNotFound(punishableNick));
+        if (!user.isMuted()) {
+            sender.sendMessage(MessagesData.getMSG_PlayerNotFound(user_nick));
             return true;
         }
 
         // удаляем из бд
-        MySQL.insert("DELETE FROM mutes WHERE nick=\"" + punishableNick + "\"");
+        user.unmute();
 
         // логируем
-        Logging.INFO(MessagesData.getLogging_UnmuteLog(sender.getName(), punishableNick));
+        Logging.INFO(MessagesData.getLogging_UnmuteLog(sender.getName(), user_nick));
 
         // бродкастим
-        Bukkit.broadcast(MessagesData.getLogging_UnmuteLog(sender.getName(), punishableNick), "hfp.unmute.notify");
+        if (!silent) {
+            Bukkit.broadcast(MessagesData.getLogging_UnmuteLog(sender.getName(), user_nick), "hfp.unmute.notify");
+        }
 
         return true;
     }

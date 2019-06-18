@@ -11,18 +11,13 @@ public class MySQL {
 
     private static Connection connection;
 
-    private static final String login = ConfigData.getMySQL_login();
-    private static final String password = ConfigData.getMySQL_password();
-    private static final String url = ConfigData.getMySQL_url();
-
     private static Connection getConnection() throws SQLException {
-
-        if (login != null)
-            return DriverManager.getConnection(url, login, password);
-        else return DriverManager.getConnection(url);
+        if (ConfigData.getMySQL_login() != null)
+            return DriverManager.getConnection(ConfigData.getMySQL_url(), ConfigData.getMySQL_login(), ConfigData.getMySQL_password());
+        else return DriverManager.getConnection(ConfigData.getMySQL_url());
     }
 
-    public static void insert(final String query) {
+    static void insert(final String query) {
         try {
             try {
                 connection = getConnection();
@@ -180,9 +175,9 @@ public class MySQL {
 
             }
 
-            final ResultSet nicksRS = statement.executeQuery("SELECT nick FROM bans");
-            while (nicksRS.next()) {
-                nicks.add(nicksRS.getString("nick"));
+            final ResultSet UUIDsRS = statement.executeQuery("SELECT UUID FROM bans");
+            while (UUIDsRS.next()) {
+                nicks.add(getString("SELECT nick FROM players WHERE UUID=\"" + UUIDsRS.getString("UUID") + "\"", "nick"));
 
             }
 
@@ -201,7 +196,7 @@ public class MySQL {
         String[] result = new String[nicks.toArray().length];
 
         for (int i = 0; i < nicks.toArray().length; i++) {
-            result[i] = "§7[" + issuedDate.get(i) + " " + issuedTime.get(i) + "] §f" + nicks.get(i) + " §7: §f" + reasons.get(i);
+            result[i] = MessagesData.getMSG_BanlistFormat(issuedDate.get(i), issuedTime.get(i), nicks.get(i), reasons.get(i));
         }
 
         return result;
@@ -255,13 +250,13 @@ public class MySQL {
         String[] result = new String[IPs.toArray().length];
 
         for (int i = 0; i < IPs.toArray().length; i++) {
-            result[i] = "§7[" + issuedDate.get(i) + " " + issuedTime.get(i) + "] §f" + IPs.get(i) + " §7: §f" + reasons.get(i);
+            result[i] = MessagesData.getMSG_BanlistFormat(issuedDate.get(i), issuedTime.get(i), IPs.get(i), reasons.get(i));
         }
 
         return result;
     }
 
-    public static String[] getWarnlist(final String nick) {
+    public static String[] getWarnlist(final String UUID) {
         ArrayList<String> issuedDate = new ArrayList<>();
         ArrayList<String> issuedTime = new ArrayList<>();
         ArrayList<String> warnsID = new ArrayList<>();
@@ -276,25 +271,22 @@ public class MySQL {
 
             final Statement statement = connection.createStatement();
 
-            final ResultSet issuedDateRS = statement.executeQuery("SELECT issuedDate FROM warns WHERE nick=\"" + nick + "\"");
+            final ResultSet issuedDateRS = statement.executeQuery("SELECT issuedDate FROM warns WHERE UUID=\"" + UUID + "\"");
             while (issuedDateRS.next()) {
                 issuedDate.add(issuedDateRS.getString("issuedDate"));
-
             }
 
-            final ResultSet issuedTimeRS = statement.executeQuery("SELECT issuedTime FROM warns WHERE nick=\"" + nick + "\"");
+            final ResultSet issuedTimeRS = statement.executeQuery("SELECT issuedTime FROM warns WHERE UUID=\"" + UUID + "\"");
             while (issuedTimeRS.next()) {
                 issuedTime.add(issuedTimeRS.getString("issuedTime"));
-
             }
 
-            final ResultSet warnsIDRS = statement.executeQuery("SELECT warnID FROM warns WHERE nick=\"" + nick + "\"");
+            final ResultSet warnsIDRS = statement.executeQuery("SELECT id FROM warns WHERE UUID=\"" + UUID + "\"");
             while (warnsIDRS.next()) {
-                warnsID.add(warnsIDRS.getString("warnID"));
-
+                warnsID.add(warnsIDRS.getString("id"));
             }
 
-            final ResultSet reasonsRS = statement.executeQuery("SELECT reason FROM warns WHERE nick=\"" + nick + "\"");
+            final ResultSet reasonsRS = statement.executeQuery("SELECT reason FROM warns WHERE UUID=\"" + UUID + "\"");
             while (reasonsRS.next()) {
                 reasons.add(reasonsRS.getString("reason"));
             }
@@ -309,7 +301,7 @@ public class MySQL {
         String[] result = new String[warnsID.toArray().length];
 
         for (int i = 0; i < warnsID.toArray().length; i++) {
-            result[i] = "§7[" + issuedDate.get(i) + " " + issuedTime.get(i) + "] §fID " + warnsID.get(i) + " §7: §f" + reasons.get(i);
+            result[i] = MessagesData.getMSG_BanlistFormat(issuedDate.get(i), issuedTime.get(i), warnsID.get(i), reasons.get(i));
         }
 
         return result;

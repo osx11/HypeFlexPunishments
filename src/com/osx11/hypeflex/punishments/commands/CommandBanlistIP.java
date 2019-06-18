@@ -1,6 +1,5 @@
 package com.osx11.hypeflex.punishments.commands;
 
-import com.osx11.hypeflex.punishments.Main;
 import com.osx11.hypeflex.punishments.MySQL;
 import com.osx11.hypeflex.punishments.User;
 import com.osx11.hypeflex.punishments.data.MessagesData;
@@ -10,15 +9,11 @@ import org.bukkit.command.CommandSender;
 
 public class CommandBanlistIP implements CommandExecutor {
 
-    private Main plugin;
-
-    public CommandBanlistIP(Main plugin) {
-        this.plugin = plugin;
-    }
+    public CommandBanlistIP() { }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (!User.hasPermission(sender, "hfp.banlist")) {
+        if (!sender.hasPermission("hfp.banlist")) {
             sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
             return true;
         }
@@ -30,8 +25,8 @@ public class CommandBanlistIP implements CommandExecutor {
             return true;
         }
 
-        for (int i = 0; i < MySQL.getBanListIP().length; i++) {
-            sender.sendMessage(MySQL.getBanListIP()[i]);
+        for (String ban : MySQL.getBanListIP()) {
+            sender.sendMessage(ban);
         }
 
         return true;

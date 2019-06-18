@@ -1,13 +1,9 @@
 package com.osx11.hypeflex.punishments.commands;
 
 import com.osx11.hypeflex.punishments.Logging;
-import com.osx11.hypeflex.punishments.Main;
-import com.osx11.hypeflex.punishments.MySQL;
 import com.osx11.hypeflex.punishments.User;
-import com.osx11.hypeflex.punishments.data.ConfigData;
 import com.osx11.hypeflex.punishments.data.MessagesData;
 import com.osx11.hypeflex.punishments.exceptions.InvalidPunishReason;
-import com.osx11.hypeflex.punishments.utils.DateUtils;
 import com.osx11.hypeflex.punishments.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -17,113 +13,78 @@ import org.bukkit.entity.Player;
 
 public class CommandBan implements CommandExecutor {
 
-    private Main plugin;
-
-    public CommandBan(Main plugin) {
-        this.plugin = plugin;
-    }
-
-    private CoolDown coolDown = new CoolDown();
+    public CommandBan() {}
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (!User.hasPermission(sender, "hfp.ban")) {
+        if (!sender.hasPermission("hfp.ban")) {
             sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
             return true;
         }
 
         if (args.length < 1) { return false; }
 
-        boolean forceSpecified = false;
-        if (args[0].equalsIgnoreCase("-f")) {
-            if (User.hasPermission(sender, "hfp.ban.force")) {
-                forceSpecified = true;
-            } else {
-                sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
+        boolean force = Utils.flagForce(args);
+        boolean silent = Utils.flagSilent(args);
+        args = Utils.removeFlags(args);
+
+        if ((force && !sender.hasPermission("hfp.ban.force")) || (silent && !sender.hasPermission("hfp.ban.silent"))) {
+            sender.sendMessage(MessagesData.getMSG_InsufficientPermissions());
+            return true;
+        }
+
+        String user_nickname = args[0];
+        User user = new User(user_nickname);
+
+        // если игрок не найден
+        if (!user.isOnline()) {
+            if (!sender.hasPermission("hfp.ban.offline")) {
+                sender.sendMessage(MessagesData.getMSG_PlayerIsOffline(user_nickname));
+                return true;
+            }
+            if (user.getUUID() == null) { // если игрока нет вообще (по uuid в таблице)
+                sender.sendMessage(MessagesData.getMSG_PlayerNotFound(user_nickname));
                 return true;
             }
         }
 
-        String punishableNick;
+        // если у игрока иммунитет
+        if (user.hasExempt("ban") && sender instanceof Player && !force) {
+            sender.sendMessage(MessagesData.getMSG_Exempt(user_nickname));
+            return true;
+        }
 
-        if (forceSpecified) {
-            if (args.length < 2) { return false; }
-            punishableNick = args[1];
-        } else {
-            punishableNick = args[0];
+        // проверяем активно ли кд у сендера
+        if (sender instanceof Player && new User(sender.getName()).updateCooldown("ban")) {
+            return true;
         }
 
         String reason = MessagesData.getReason_DefaultReason();
-        final Player player = Bukkit.getPlayer(punishableNick);
-        final String UUID = MySQL.getString("SELECT UUID FROM players WHERE nick=\"" + punishableNick + "\"", "UUID");
-        final int cooldownConfig = ConfigData.getCoolDownBan();
-        final String date = DateUtils.getCurrentDate();
-        final String time = DateUtils.getCurrentTime();
-
-        // если игрок не найден
-        if (!User.isOnline(player)) {
-            if (!User.hasPermission(sender, "hfp.ban.offline")) {
-                sender.sendMessage(MessagesData.getMSG_PlayerIsOffline());
-                return true;
-            }
-            if (!forceSpecified) {
-                if (UUID == null) { // если игрока нет вообще (по uuid в таблице)
-                    sender.sendMessage(MessagesData.getMSG_PlayerNotFound(punishableNick));
-                    return true;
-                }
-            }
-        }
-
-        // если у человека иммунитет
-        if (User.hasPermission(punishableNick, "hfp.ban.exempt") && sender instanceof Player) {
-            sender.sendMessage(MessagesData.getMSG_Exempt(punishableNick));
-            return true;
-        }
-
-        // проверяем активно ли кд
-        if (sender instanceof Player) {
-            if (coolDown.hasCoolDown(Bukkit.getPlayer(sender.getName()), "ban", cooldownConfig))
-                return true;
-        }
-
         // пишем причину
-        try {
-            if (forceSpecified) {
-                if (args.length > 2) {
-                    reason = Utils.GetFullReason(args, 2);
-                }
-            } else {
-                if (args.length > 1) {
-                    reason = Utils.GetFullReason(args, 1);
-                }
+        if (args.length > 1) {
+            try {
+                reason = Utils.GetFullReason(args, 1);
+            } catch (InvalidPunishReason e) {
+                sender.sendMessage(e.getMessage());
+                return true;
             }
-        } catch (InvalidPunishReason e) {
-            sender.sendMessage(e.getMessage());
-            return true;
-        }
-
-        // кикаем, если онлайн
-        if (User.isOnline(player)) {
-            User.kickUser("ban", player, reason);
         }
 
         // добавляем в бд
-        if (User.isBanned(punishableNick)) {
-            if (User.hasPermission(sender, "hfp.ban.override")) {
-                MySQL.insert("UPDATE bans SET punishTimeString=\"*permanent*\", punishTimeSeconds=0, reason=\"" + reason + "\", issuedDate=\"" + date + "\", issuedTime=\"" + time + "\", issuedBy=\"" + sender.getName() + "\" WHERE nick=\"" + punishableNick + "\"");
-            } else {
-                sender.sendMessage(MessagesData.getMSG_CannotOverride());
-                return true;
-            }
-        } else {
-            MySQL.insert("INSERT INTO bans SET nick=\"" + punishableNick + "\", punishTimeString=\"*permanent*\", reason=\"" + reason + "\", issuedDate=\"" + date + "\", issuedTime=\"" + time + "\", issuedBy=\"" + sender.getName() + "\"");
+        if (user.isBanned() && !sender.hasPermission("hfp.ban.override")) {
+            sender.sendMessage(MessagesData.getMSG_CannotOverride());
+            return true;
         }
 
+        user.ban(reason, sender.getName());
+
         // логируем
-        Logging.INFO(MessagesData.getLogging_BanLog(sender.getName(), punishableNick, reason));
+        Logging.INFO(MessagesData.getLogging_BanLog(sender.getName(), user_nickname, reason));
 
         // бродкастим
-        Bukkit.broadcast(MessagesData.getLogging_BanLog(sender.getName(), punishableNick, reason), "hfp.ban.notify");
+        if (!silent) {
+            Bukkit.broadcast(MessagesData.getLogging_BanLog(sender.getName(), user_nickname, reason), "hfp.ban.notify");
+        }
 
         return true;
     }

@@ -4,7 +4,7 @@ import com.osx11.hypeflex.punishments.data.MessagesData;
 
 public class PlayerNotFoundInDB extends Exception {
 
-    public PlayerNotFoundInDB(String nick) {
+    public PlayerNotFoundInDB(final String nick) {
         super(MessagesData.getMSG_PlayerNotFound(nick));
     }
 

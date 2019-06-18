@@ -1,6 +1,10 @@
 package com.osx11.hypeflex.punishments.data;
 
 import com.osx11.hypeflex.punishments.Main;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.HashMap;
 
 public final class ConfigData {
 
@@ -17,19 +21,13 @@ public final class ConfigData {
     private static String MySQL_password;
     private static String MySQL_url;
 
-    private static int coolDownKick;
-    private static int coolDownBan;
-    private static int coolDownBanIP;
-    private static int coolDownTempban;
-    private static int coolDownMute;
-    private static int coolDownMuteIP;
-    private static int coolDownTempmute;
-    private static int coolDownWarn;
+    private static HashMap<String, Long> cooldowns = new HashMap<>();
 
     private static String[] warnsCountCommands;
-
     private static boolean Warns_AutoExecute;
     private static boolean Warns_DeleteAfterLast;
+    private static HashMap<String, Boolean> onlineOnly = new HashMap<>();
+    private static HashMap<String, String> commandsToExecute = new HashMap<>();
 
     public void setConfigData() {
         try {
@@ -37,19 +35,24 @@ public final class ConfigData {
             MySQL_password = plugin.getConfig().getString("MySQL.password");
             MySQL_url = plugin.getConfig().getString("MySQL.url");
 
-            coolDownKick = plugin.getConfig().getInt("cooldowns.kick");
-            coolDownBan = plugin.getConfig().getInt("cooldowns.ban");
-            coolDownBanIP = plugin.getConfig().getInt("cooldowns.banip");
-            coolDownTempban = plugin.getConfig().getInt("cooldowns.tempban");
-            coolDownMute = plugin.getConfig().getInt("cooldowns.mute");
-            coolDownMuteIP = plugin.getConfig().getInt("cooldowns.muteip");
-            coolDownTempmute = plugin.getConfig().getInt("cooldowns.tempmute");
-            coolDownWarn = plugin.getConfig().getInt("cooldowns.warn");
+            cooldowns.put("kick", plugin.getConfig().getLong("cooldowns.kick"));
+            cooldowns.put("ban", plugin.getConfig().getLong("cooldowns.ban"));
+            cooldowns.put("banip", plugin.getConfig().getLong("cooldowns.banip"));
+            cooldowns.put("tempban", plugin.getConfig().getLong("cooldowns.tempban"));
+            cooldowns.put("mute", plugin.getConfig().getLong("cooldowns.mute"));
+            cooldowns.put("muteip", plugin.getConfig().getLong("cooldowns.muteip"));
+            cooldowns.put("tempmute", plugin.getConfig().getLong("cooldowns.tempmute"));
+            cooldowns.put("warn", plugin.getConfig().getLong("cooldowns.warn"));
 
             warnsCountCommands = plugin.getConfig().getConfigurationSection("warns.on_warn_count").getKeys(false).toArray(new String[plugin.getConfig().getConfigurationSection("warns.on_warn_count").getKeys(false).size()]);
-
             Warns_AutoExecute = plugin.getConfig().getBoolean("warns.command_auto_execute");
             Warns_DeleteAfterLast = plugin.getConfig().getBoolean("warns.delete_all_warnings_after_last_warn");
+
+            for (String onCount : warnsCountCommands) {
+                onlineOnly.put(onCount, plugin.getConfig().getBoolean("warns.on_warn_count." + onCount + ".if_player_is_online"));
+                commandsToExecute.put(onCount, plugin.getConfig().getString("warns.on_warn_count." + onCount + ".command"));
+            }
+
         } catch (java.lang.NullPointerException e) { e.printStackTrace(); }
     }
 
@@ -57,59 +60,25 @@ public final class ConfigData {
 // Для доступа из вне
 
     public static String getMySQL_login() { return MySQL_login; }
-
     public static String getMySQL_password() { return MySQL_password; }
-
     public static String getMySQL_url() { return MySQL_url; }
 
-
-
-    public static int getCoolDownKick() {
-        return coolDownKick;
+    public static long getCooldown(final String command) {
+        return cooldowns.get(command);
     }
-
-    public static int getCoolDownBan() {
-        return coolDownBan;
-    }
-
-    public static int getCoolDownBanIP() {
-        return coolDownBanIP;
-    }
-
-    public static int getCoolDownTempban() {
-        return coolDownTempban;
-    }
-
-    public static int getCoolDownMute() {
-        return coolDownMute;
-    }
-
-    public static int getCoolDownMuteIP() {
-        return coolDownMuteIP;
-    }
-
-    public static int getCoolDownTempmute() {
-        return coolDownTempmute;
-    }
-
-    public static int getCoolDownWarn() {
-        return coolDownWarn;
-    }
-
-
 
     public static String[] getWarnsCountCommands() {
         return warnsCountCommands;
     }
-
-
-
     public static boolean getWarns_AutoExecute() {
         return Warns_AutoExecute;
     }
-
     public static boolean getWarns_DeleteAfterLast() {
         return Warns_DeleteAfterLast;
+    }
+    public static boolean getOnlineOnly(String onCount) { return onlineOnly.get(onCount); }
+    public static String getCommandToExecute(String player, String onCount) {
+        return commandsToExecute.get(onCount).replaceAll("%player%", player).replaceAll("%warnsCount%", onCount);
     }
 
 // ---------------------------------------------------------------------------------------------------------------------
