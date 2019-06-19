@@ -196,7 +196,7 @@
 
 /unwarn (-s) [player] [warn id] - `hfp.unwarn` - delete player's warn with specified id
 
-/unwarn (-a) (-s) [player] - `hfp.unwarn` - delete all player's warnings
+/unwarn (-s) [-a] [player] - `hfp.unwarn` - delete all player's warnings
 
 `hfp.unwarn.silent` - use `-s` flag
 
